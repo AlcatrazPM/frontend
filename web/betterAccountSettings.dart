@@ -9,11 +9,23 @@ class BetterAccountSettings extends StatelessWidget {
   final int fourthFlex = 20;
 
   final int emailTextFlex = 7;
-  final int emailRowFlex = 28;
-  final int masterTextFlex = 7;
-  final int masterRowFlex = 28;
-  final int emptyRowFlex = 30;
+  final int emailRowFlex = 30;
+  final int masterTextFlex = 10;
+  final int masterRowFlex = 35;
+  final int emptyRowFlex = 18;
 
+  Widget DataField(String title) {
+    return TextFormField(
+      //autofocus: true,
+      cursorColor: Colors.amber,
+      style: TextStyle(height: 1.0),
+      decoration: InputDecoration(
+        labelText: title,
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      ),
+    );
+
+  }
 
   Widget settingsButton() {
     return Row (
@@ -190,16 +202,24 @@ class BetterAccountSettings extends StatelessWidget {
                                     child: Expanded(
                                       child: ListView (
                                         children: <Widget>[
-                                          TextFormField (
-                                            decoration: InputDecoration(
-                                              hintText: "Master Password",
-                                            ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DataField("Master Password"),
                                           ),
-                                          TextFormField (
-                                            decoration: InputDecoration(
-                                              hintText: "New E-mail",
-                                            ),
-                                          ),
+//                                          TextFormField (
+//                                            decoration: InputDecoration(
+//                                              hintText: "Master Password",
+//                                            ),
+//                                          ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: DataField("New E-mail"),
+                                        ),
+//                                          TextFormField (
+//                                            decoration: InputDecoration(
+//                                              hintText: "New E-mail",
+//                                            ),
+//                                          ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: smallButton("Save", ()=>{}),
@@ -231,10 +251,13 @@ class BetterAccountSettings extends StatelessWidget {
                   //Third ROW, Titled "Change Master Password"
                   Expanded (
                     flex: masterTextFlex,
-                    child: Column (
-                      children: <Widget>[
-                        underlinedText("Change Master Password")
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column (
+                        children: <Widget>[
+                          underlinedText("Change Master Password")
+                        ],
+                      ),
                     ),
                   ),
 
@@ -252,16 +275,24 @@ class BetterAccountSettings extends StatelessWidget {
                             //color: Colors.red,
                             child: Column (
                               children: <Widget>[
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: "Current Master Password"
-                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DataField("Master Password"),
                                 ),
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: "New Master Password",
-                                  ),
-                                ),
+//                                TextFormField(
+//                                  decoration: InputDecoration(
+//                                    hintText: "Current Master Password"
+//                                  ),
+//                                ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DataField("New Master Password"),
+                              ),
+//                                TextFormField(
+//                                  decoration: InputDecoration(
+//                                    hintText: "New Master Password",
+//                                  ),
+//                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: smallButton("Save", ()=>{}),
@@ -284,11 +315,15 @@ class BetterAccountSettings extends StatelessWidget {
                             //color: Colors.blue,
                             child: Column (
                               children: <Widget>[
-                                TextFormField (
-                                  decoration: InputDecoration(
-                                    hintText: "Confirm New Master Password",
-                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DataField("Confirm New Master Password"),
                                 ),
+//                                TextFormField (
+//                                  decoration: InputDecoration(
+//                                    hintText: "Confirm New Master Password",
+//                                  ),
+//                                ),
                               ],
 
                             ),

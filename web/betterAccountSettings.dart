@@ -27,41 +27,34 @@ class BetterAccountSettings extends StatelessWidget {
 
   }
 
-  Widget settingsButton() {
+  // luat de la mihai
+  Widget settingsButton(String text) {
     return Row (
       children: <Widget>[
-//        Expanded (
-//          flex: 1,
-//          child: SizedBox(),
-//        ),
-        Expanded (
-          flex: 9,
-          child: FlatButton(
-            onPressed: (){},
-            child: Row (
-              children: <Widget>[
-                Icon(Icons.accessible_forward),
-                Text("Press me"),
-              ],
-            ),
+        FlatButton(
+          onPressed: (){},
+          child: Row (
+            children: <Widget>[
+              Icon(Icons.favorite, color: Colors.grey[300],),
+              Text(text),
+            ],
           ),
         ),
       ],
     );
   }
 
+
+  // for the additional options on the left
   Widget customCard() {
     return Container (
-
       width: 200.0,
       height: 250.0,
       margin: EdgeInsets.all(20),
 
       decoration: BoxDecoration (
         //color: Colors.purpleAccent,
-        borderRadius: new BorderRadius.only(
-            topLeft:  const  Radius.circular(10.0),
-            topRight: const  Radius.circular(10.0)),
+        borderRadius: new BorderRadius.all(Radius.circular(10.0)),
         border: Border.all(color: Colors.grey),
       ),
 
@@ -69,13 +62,13 @@ class BetterAccountSettings extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Text("Settings"),
+            child: Text('Tools'),
           ),
           Divider(height: 3, thickness: 2,),
 
           //Here the buttons start
-          settingsButton(),
-          settingsButton(),
+          settingsButton('Change email'),
+          settingsButton('Master Password'),
         ],
       ),
     );
@@ -87,7 +80,8 @@ class BetterAccountSettings extends StatelessWidget {
         Expanded (
           flex: 3,
           child: RaisedButton (
-            child: Text(text),
+            color: Colors.blue,
+            child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
             onPressed: func,
           ),
         ),
@@ -143,7 +137,7 @@ class BetterAccountSettings extends StatelessWidget {
           Expanded (
             flex: firstFlex,
             child: Container(
-             // color: Colors.green,
+              // color: Colors.green,
               child: Column(
 
               ),
@@ -211,10 +205,10 @@ class BetterAccountSettings extends StatelessWidget {
 //                                              hintText: "Master Password",
 //                                            ),
 //                                          ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: DataField("New E-mail"),
-                                        ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DataField("New E-mail"),
+                                          ),
 //                                          TextFormField (
 //                                            decoration: InputDecoration(
 //                                              hintText: "New E-mail",
@@ -222,7 +216,7 @@ class BetterAccountSettings extends StatelessWidget {
 //                                          ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: smallButton("Save", ()=>{}),
+                                            child: smallButton("SAVE", ()=>{}),
                                           )
                                         ],
                                       ),
@@ -284,10 +278,10 @@ class BetterAccountSettings extends StatelessWidget {
 //                                    hintText: "Current Master Password"
 //                                  ),
 //                                ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: DataField("New Master Password"),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DataField("New Master Password"),
+                                ),
 //                                TextFormField(
 //                                  decoration: InputDecoration(
 //                                    hintText: "New Master Password",

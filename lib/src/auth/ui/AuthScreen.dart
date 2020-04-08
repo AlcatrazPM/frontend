@@ -15,6 +15,7 @@ import 'RegisterFragment.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
+
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -118,6 +119,12 @@ class _AuthScreenState extends State<AuthScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
+                                RaisedButton(
+                                  onPressed: (){
+                                  // bbjhn
+
+                                }
+                                ),
                                 Icon(
                                   Icons.security,
                                   size: 130,
@@ -209,9 +216,16 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {});
   }
 
+
+  Future<String> changeMail(String sdf, String df) async{
+
+  }
+
   Future<String> onLogin(String username, String password) async {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-      return kIsWeb ? MainPageWeb() : AccountsListScreen();
+
+      //return kIsWeb? CustomTabBar() : AccountsListScreen();
+       return kIsWeb ? MainPageWeb() : AccountsListScreen();
     }));
   }
 
@@ -220,4 +234,8 @@ class _AuthScreenState extends State<AuthScreen> {
       return kIsWeb? CustomTabBar() : AccountsListScreen();
     }));
   }
+
 }
+
+
+

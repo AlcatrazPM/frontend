@@ -94,6 +94,7 @@ class BetterAccountSettings extends StatelessWidget {
   }
 
   Widget customDivider(double h) {
+
     return new SizedBox(
       height: h,
       child: new Center(
@@ -126,100 +127,106 @@ class BetterAccountSettings extends StatelessWidget {
   Widget build (BuildContext context) {
     //Inside the principal row, there are 4 column.
     //Third Column, from left to right, has 5 rows stacked.
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Row (
-        //This is the principal ROW. All columns reside here.
-        //Space will be shared horizontally by columns.
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 800, maxWidth: 1300),
+            child: Row (
+              //This is the principal ROW. All columns reside here.
+              //Space will be shared horizontally by columns.
 
-        children: <Widget>[
+              children: <Widget>[
 
-          //First Empty Column
-          Expanded (
-            flex: firstFlex,
-            child: Container(
-              // color: Colors.green,
-              child: Column(
-
-              ),
-            ),
-          ),
-
-          //Second Column, Contains some Settings Widget
-          Expanded (
-            flex: secondFlex,
-            child: Container (
-              //color: Colors.purpleAccent,
-              child: Column(
-                children: <Widget>[
-                  customCard(),
-                ],
-
-              ),
-            ),
-          ),
-
-          //Third Column, Here is the IMPORTANT stuff.
-          Expanded (
-            flex: thirdFlex,
-            child: Container (
-              //color: Colors.yellow,
-              padding: EdgeInsets.all(10),
-              child: Column (
-                children: <Widget>[
-
-                  //First Row, Title "Change-Email"
-                  Expanded(
-                    flex: emailTextFlex,
-                    child: Column (
+                //First Empty Column
+                Spacer(flex: 1),
+                //Second Column, Contains some Settings Widget
+                Expanded (
+                  flex: 10,
+                  child: Container (
+                    //color: Colors.purpleAccent,
+                    child: Column(
                       children: <Widget>[
-                        underlinedText("Change-Email"),
+                        customCard(),
                       ],
+
                     ),
                   ),
+                ),
 
-                  //Second Row, splitted in two columns.
-                  Expanded(
-                    flex: emailRowFlex,
-                    child: Row (
+                //Third Column, Here is the IMPORTANT stuff.
+                Expanded (
+                  flex: 10,
+                  child: Container (
+                    //color: Colors.yellow,
+                    padding: EdgeInsets.all(10),
+                    child: Column (
                       children: <Widget>[
 
-                        //First Column of the Splitted Row
-                        Expanded (
-                          flex: 1,
-                          child: Container(
-                            //color: Colors.blue,
-                            child: Column(
-                              //Here starts the first form.
+                        //First Row, Title "Change-Email"
+                        underlinedText("Change-Email"),
+
+                        //Second Row, splitted in two columns.
+                        Expanded(
+                          flex: emailRowFlex,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row (
                               children: <Widget>[
-                                Form (
-                                  child: Container (
-                                    child: Expanded(
-                                      child: ListView (
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: DataField("Master Password"),
-                                          ),
+                                //First Column of the Splitted Row
+                                Expanded (
+                                  flex: 1,
+                                  child: Container(
+                                    //color: Colors.blue,
+                                    child: Column(
+                                      //Here starts the first form.
+                                      children: <Widget>[
+                                        Form (
+                                          child: Container (
+                                            child: Expanded(
+                                              child: ListView (
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: DataField("Master Password"),
+                                                  ),
 //                                          TextFormField (
 //                                            decoration: InputDecoration(
 //                                              hintText: "Master Password",
 //                                            ),
 //                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: DataField("New E-mail"),
-                                          ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: DataField("New E-mail"),
+                                                  ),
 //                                          TextFormField (
 //                                            decoration: InputDecoration(
 //                                              hintText: "New E-mail",
 //                                            ),
 //                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: smallButton("SAVE", ()=>{}),
-                                          )
-                                        ],
-                                      ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: smallButton("SAVE", ()=>{}),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                //Second Column of the Splitted Row
+                                Expanded (
+                                  flex: 1,
+                                  child: Container(
+                                    //color: Colors.green,
+                                    child: Column(
+
                                     ),
                                   ),
                                 ),
@@ -228,128 +235,117 @@ class BetterAccountSettings extends StatelessWidget {
                           ),
                         ),
 
-                        //Second Column of the Splitted Row
+                        //Third ROW, Titled "Change Master Password"
                         Expanded (
-                          flex: 1,
-                          child: Container(
-                            //color: Colors.green,
-                            child: Column(
-
+                          flex: masterTextFlex,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column (
+                              children: <Widget>[
+                                underlinedText("Change Master Password")
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
 
-                  //Third ROW, Titled "Change Master Password"
-                  Expanded (
-                    flex: masterTextFlex,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column (
-                        children: <Widget>[
-                          underlinedText("Change Master Password")
-                        ],
-                      ),
-                    ),
-                  ),
+                        //Fourth Row, split in Two Columns
+                        Expanded (
+                          flex: masterRowFlex,
+                          child: Row(
 
-                  //Fourth Row, split in Two Columns
-                  Expanded (
-                    flex: masterRowFlex,
-                    child: Row(
+                            children: <Widget>[
 
-                      children: <Widget>[
-
-                        //First column of the Row Master Password
-                        Expanded(
-                          flex: 45,
-                          child: Container(
-                            //color: Colors.red,
-                            child: Column (
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DataField("Master Password"),
-                                ),
+                              //First column of the Row Master Password
+                              Expanded(
+                                flex: 45,
+                                child: Container(
+                                  //color: Colors.red,
+                                  child: Column (
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DataField("Master Password"),
+                                      ),
 //                                TextFormField(
 //                                  decoration: InputDecoration(
 //                                    hintText: "Current Master Password"
 //                                  ),
 //                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DataField("New Master Password"),
-                                ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DataField("New Master Password"),
+                                      ),
 //                                TextFormField(
 //                                  decoration: InputDecoration(
 //                                    hintText: "New Master Password",
 //                                  ),
 //                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: smallButton("Save", ()=>{}),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: smallButton("Save", ()=>{}),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
 
-                        //Spacing between the 2 columns.
-                        Expanded(
-                          flex: 10,
-                          child: SizedBox(),
-                        ),
+                              //Spacing between the 2 columns.
+                              Expanded(
+                                flex: 10,
+                                child: SizedBox(),
+                              ),
 
-                        //Second Column of the Row Master Password
-                        Expanded (
-                          flex: 45,
-                          child: Container(
-                            //color: Colors.blue,
-                            child: Column (
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DataField("Confirm New Master Password"),
-                                ),
+                              //Second Column of the Row Master Password
+                              Expanded (
+                                flex: 45,
+                                child: Container(
+                                  //color: Colors.blue,
+                                  child: Column (
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DataField("Confirm New Master Password"),
+                                      ),
 //                                TextFormField (
 //                                  decoration: InputDecoration(
 //                                    hintText: "Confirm New Master Password",
 //                                  ),
 //                                ),
-                              ],
+                                    ],
 
-                            ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+
+                        //The last, EMPTY ROW.
+                        Expanded (
+                          flex: emptyRowFlex,
+                          child: Row (),
                         ),
                       ],
                     ),
                   ),
+                ),
 
-                  //The last, EMPTY ROW.
-                  Expanded (
-                    flex: emptyRowFlex,
-                    child: Row (),
+                //Fourth Column, here is EMPTY SPACE
+                Expanded (
+                  flex: 1,
+                  child: Container (
+                    //color: Colors.red,/////////////////////////////////
+                    child: Column (
+
+                    ),
                   ),
-                ],
-              ),
+                ),
+
+                //End of PRINCIPAL ROW
+              ],
             ),
           ),
-
-          //Fourth Column, here is EMPTY SPACE
-          Expanded (
-            flex: fourthFlex,
-            child: Container (
-              //color: Colors.red,/////////////////////////////////
-              child: Column (
-
-              ),
-            ),
-          ),
-
-          //End of PRINCIPAL ROW
-        ],
+        ),
       ),
     );
   }

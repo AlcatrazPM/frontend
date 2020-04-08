@@ -1,5 +1,7 @@
 import 'package:alkatrazpm/src/accounts/ui/AccountsListScreen.dart';
+import 'package:alkatrazpm/src/accounts/ui/EcranJmek.dart';
 import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
+import 'package:alkatrazpm/src/web/tabs.dart';
 import 'package:flutter/material.dart';
 
 import 'src/auth/ui/AuthScreen.dart';
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: AuthScreen(),
+      home: EcranJmek(),
     );
   }
 }

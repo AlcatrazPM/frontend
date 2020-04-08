@@ -26,6 +26,7 @@ class _LoginFragmentState extends State<LoginFragment> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,

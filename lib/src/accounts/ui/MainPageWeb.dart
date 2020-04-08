@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/accounts/ui/VaultWeb.dart';
 import 'package:alkatrazpm/src/auth/ui/AccountAdminWeb.dart';
 import 'package:alkatrazpm/src/auth/ui/AuthScreen.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
@@ -103,17 +104,16 @@ class _MainPageWebState extends State<MainPageWeb>
                   Container(
                     width: MediaQuery.of(context).size.width-50,
                     child: SingleChildScrollView(
-                      child: AccountAdminWeb(),
+                      child: VaultWeb(),
                     ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width-50,
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[Text("djnjkd")],
-                      ),
+                      child: AccountAdminWeb(),
                     ),
                   ),
+
                   Container(
                     width: MediaQuery.of(context).size.width-50,
                     child: SingleChildScrollView(

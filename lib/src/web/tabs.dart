@@ -54,8 +54,8 @@ class CustomTabBar extends StatelessWidget {
 										flex: 3,
 										child: TabBar(
 										tabs: [
-											Text('Vault',textScaleFactor: 1.2, style: TextStyle(fontWeight: FontWeight.bold),),
 											Text('Account Settings',textScaleFactor: 1.2, style: TextStyle(fontWeight: FontWeight.bold),),
+											Text('Vault',textScaleFactor: 1.2, style: TextStyle(fontWeight: FontWeight.bold),),
 											Text('Password Generator', textScaleFactor: 1.2, style: TextStyle(fontWeight: FontWeight.bold),),
 											Text('Options',textScaleFactor: 1.2, style: TextStyle(fontWeight: FontWeight.bold),),
 										],
@@ -77,8 +77,8 @@ class CustomTabBar extends StatelessWidget {
 
 					body: TabBarView(
 						children: [
-							Tab(child: Vault(),),
 							Tab(child: BetterAccountSettings(),),
+							Tab(child: Vault(),),
 							Tab(child: PasswordGenerator(),),
 							Tab(child: Options(),),
 

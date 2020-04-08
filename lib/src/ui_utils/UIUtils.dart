@@ -43,8 +43,16 @@ class UiUtils {
     if(w > 700)
       return 7;
     if( w < 500)
-      return 15;
-    return 13;
+      return 20;
+    return 20;
+  }
 
+  static double textfieldWidth(BuildContext context){
+    double width = MediaQuery.of(context).size.width;
+    if(width < 600)
+      return 200;
+    if(showDetails(context) && width < 1100)
+      return 200;
+    return  250;
   }
 }

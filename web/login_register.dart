@@ -104,11 +104,17 @@ class LogInPage extends StatelessWidget {
 
 
 
+class RegisterPage extends StatefulWidget {
+	@override
+	_RegisterPage createState() => _RegisterPage();
+
+}
 
 
-class RegisterPage extends StatelessWidget {
+class _RegisterPage extends State<RegisterPage> {
 
 	String password = 'alex';
+	final myController = TextEditingController();
 
 	// titlu, obscuritatea textului introdus, incoul corespunzator
 	Widget CustomDataField(String text, bool obsc, IconData icon) {
@@ -125,6 +131,25 @@ class RegisterPage extends StatelessWidget {
 		);
 	}
 
+
+	// titlu, obscuritatea textului introdus, incoul corespunzator
+	Widget CustomDataFieldPassword(String text, bool obsc, IconData icon) {
+
+		return TextFormField(
+			autofocus: true,
+			cursorColor: Colors.amber,
+			style: TextStyle(height: 2.0),
+			obscureText: obsc,  // hides the password
+			decoration: InputDecoration(
+				labelText: text,
+				icon: Icon(icon),
+			),
+			controller: myController,
+		);
+	}
+
+
+
 	// titlu, obscuritatea textului introdus, incoul corespunzator
 	Widget CustomDataFieldValidation(String text, bool obsc, IconData icon) {
 
@@ -139,7 +164,7 @@ class RegisterPage extends StatelessWidget {
 			),
 			autovalidate: true,
 			validator: (String confirmPass) {
-				if (confirmPass != password)
+				if (confirmPass != myController.text)
 					return 'Passwords do not match';
 				return null;
 			},
@@ -203,7 +228,7 @@ class RegisterPage extends StatelessWidget {
 									// username
 									CustomDataField('Username', false, Icons.account_circle),
 									// password
-									CustomDataField('Password', true, Icons.security),
+									CustomDataFieldPassword('Password', true, Icons.security),
 									// confirm password
 									CustomDataFieldValidation('Confirm Password', true, Icons.check),
 								]

@@ -2,10 +2,13 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:alkatrazpm/src/accounts/ui/AccountsListScreen.dart';
+import 'package:alkatrazpm/src/accounts/ui/MainPageWeb.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
+import 'package:alkatrazpm/src/web/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+
 
 import 'LoginFragment.dart';
 import 'RegisterFragment.dart';
@@ -208,13 +211,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<String> onLogin(String username, String password) async {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-      return AccountsListScreen();
+      return kIsWeb ? MainPageWeb() : AccountsListScreen();
     }));
   }
 
   Future<String> onRegister(String email, String username, String password) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-      return AccountsListScreen();
+      return kIsWeb? CustomTabBar() : AccountsListScreen();
     }));
   }
 }

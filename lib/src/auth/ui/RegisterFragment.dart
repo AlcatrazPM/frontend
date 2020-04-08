@@ -33,14 +33,17 @@ class _RegisterFragmentState extends State<RegisterFragment> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TextFormField(
+          controller: email,
           decoration: InputDecoration(
               labelText: "Email", prefixIcon: Icon(Icons.email)),
         ),
         TextFormField(
+          controller: username,
           decoration: InputDecoration(
               labelText: "Username", prefixIcon: Icon(Icons.account_circle)),
         ),
         TextFormField(
+          controller: password,
           obscureText: true,
           decoration: InputDecoration(
               labelText: "Password", prefixIcon: Icon(Icons.security)),

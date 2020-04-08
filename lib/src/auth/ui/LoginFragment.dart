@@ -31,10 +31,12 @@ class _LoginFragmentState extends State<LoginFragment> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TextFormField(
+          controller: username,
           decoration: InputDecoration(
               labelText: "Username", prefixIcon: Icon(Icons.account_circle)),
         ),
         TextFormField(
+          controller: password,
           obscureText: true,
           decoration: InputDecoration(
               labelText: "Password", prefixIcon: Icon(Icons.security)),
@@ -65,6 +67,7 @@ class _LoginFragmentState extends State<LoginFragment> {
   }
 
   void doLogin(String username, String password) async {
+    print("username $username");
     String error = await widget.onLoginClicked(username, password);
     if (error != "") {
       // to do

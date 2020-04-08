@@ -30,6 +30,16 @@ class UiThemes{
         brightness: Brightness.dark);
   }
 
+
+  static ThemeData webThemeScreen(BuildContext context){
+    ThemeData data = Theme.of(context);
+    return data.copyWith(
+      inputDecorationTheme: data.inputDecorationTheme.copyWith(
+        border: OutlineInputBorder()
+      )
+    );
+  }
+
   static ThemeData authThemeLight(BuildContext context){
     ThemeData themeData = Theme.of(context);
     return themeData.copyWith(

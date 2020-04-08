@@ -29,4 +29,22 @@ class UiUtils {
     Size s = MediaQuery.of(context).size;
     return s.height / s.width;
   }
+
+  static bool showDetails(BuildContext context){
+    return MediaQuery.of(context).size.width > 800;
+  }
+
+  static bool showDetailsSmall(BuildContext context){
+    return MediaQuery.of(context).size.width < 950;
+  }
+
+  static int tabBarFlex(BuildContext context){
+    double w = MediaQuery.of(context).size.width;
+    if(w > 700)
+      return 7;
+    if( w < 500)
+      return 15;
+    return 13;
+
+  }
 }

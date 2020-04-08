@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:alkatrazpm/src/accounts/ui/AccountsListScreen.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
+import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import 'LoginFragment.dart';
@@ -19,46 +21,180 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: kIsWeb
-            ? Center(
-                child: Text(login ? "Login" : "Register"),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Spacer(flex: 1),
-                  Text(login ? "Login" : "Register"),
-                  Spacer(flex: 2)
-                ],
-              ),
-        leading: login
-            ? Container()
-            : IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  changeFragment();
-                }),
-      ),
-      body: Center(
-        child: Container(
-          width: UiUtils.adaptableWidth(context),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Container(
-                child: login
-                    ? LoginFragment(
-                        onLogin,
-                        changeFragment: changeFragment,
-                      )
-                    : RegisterFragment(
-                        onRegister,
-                        changeFragment: changeFragment,
+    return UiUtils.isMobile(context) ? mobile(context) : web(context);
+  }
+
+  LinearGradient appBarGradient() => LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: <Color>[Colors.blue[300], Colors.blue[400]]);
+
+  Widget mobile(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+    return SafeArea(
+      child: Theme(
+        isMaterialAppTheme: true,
+        data: UiThemes.authTheme(context),
+        child: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[Colors.blue[400], Colors.blue])),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.security,
+                              size: 80,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "Alkatraz PM",
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          ],
+                        ),
                       ),
+                      Container(
+                        width: UiUtils.adaptableWidth(context),
+                        child: login
+                            ? LoginFragment(onLogin,
+                                changeFragment: changeFragment)
+                            : RegisterFragment(
+                                onRegister,
+                                changeFragment: changeFragment,
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget web(BuildContext context) {
+    return Theme(
+      isMaterialAppTheme: true,
+      data: UiThemes.authThemeLight(context),
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => Row(
+            children: <Widget>[
+              Expanded(
+                flex: 6,
+                child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[Colors.blue[400], Colors.blue])),
+                  height: MediaQuery.of(context).size.height,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 150),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.security,
+                                  size: 130,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  "Alkatraz PM",
+                                  style: TextStyle(
+                                      fontSize: 30, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "One PM to rule them all Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in lorem nisl. Fusce vehicula tempor facilisis. Vivamus vitae libero dignissim, placerat lacus sit amet, efficitur ligula. Vestibulum mi magna, bibendum at blandit nec, pellentesque non nisi. Pellentesque tincidunt et urna condimentum volutpat.  ",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(64.0),
+                                  child: Text(
+                                    "One PM to rule them all !",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: UiUtils.adaptableWidth(context),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      !login
+                          ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical:32.0),
+                            child: Row(
+                              children: <Widget>[
+                                IconButton(
+                                    onPressed: () {
+                                      changeFragment();
+                                    },
+                                    icon: Icon(Icons.arrow_back_ios, color: Colors.grey,),
+                                  ),
+                              ],
+                            ),
+                          )
+                          : Container(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:64.0),
+                        child: Container(
+                          width: UiUtils.adaptableWidth(context),
+                          child: login
+                              ? LoginFragment(onLogin,
+                                  changeFragment: changeFragment)
+                              : RegisterFragment(
+                                  onRegister,
+                                  changeFragment: changeFragment,
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -70,7 +206,7 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {});
   }
 
-  Future<String> onLogin(String username, String password) {
+  Future<String> onLogin(String username, String password) async {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
       return AccountsListScreen();
     }));

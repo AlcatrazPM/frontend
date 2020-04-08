@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/ui_utils/UiCommon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -40,24 +41,25 @@ class _LoginFragmentState extends State<LoginFragment> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: RaisedButton(
+          child: UiCommon.outlineButton(context,
             onPressed: () {
               doLogin(password.text, username.text);
             },
-            child: Text("Login"),
+            text: "Login",
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text("Don't have an account?"),
         ),
-        FlatButton(
-            onPressed: () {
-              if (widget.changeFragment != null) {
-                widget.changeFragment();
-              }
-            },
-            child: Text("register"))
+        UiCommon.flatButton(context,
+          onPressed: () {
+            if (widget.changeFragment != null) {
+              widget.changeFragment();
+            }
+          },
+          text: "register",
+        ),
       ],
     );
   }

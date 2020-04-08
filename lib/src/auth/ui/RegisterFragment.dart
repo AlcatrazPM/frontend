@@ -1,11 +1,13 @@
+import 'package:alkatrazpm/src/ui_utils/UiCommon.dart';
 import 'package:flutter/material.dart';
 
 class RegisterFragment extends StatefulWidget {
   final Future<String> Function(String email, String username, String password)
       onRegisterClicked;
   final void Function() changeFragment;
+  final bool darkTheme;
 
-  RegisterFragment(this.onRegisterClicked, {this.changeFragment});
+  RegisterFragment(this.onRegisterClicked, {this.changeFragment, this.darkTheme = true});
 
   @override
   _RegisterFragmentState createState() => _RegisterFragmentState();
@@ -53,37 +55,36 @@ class _RegisterFragmentState extends State<RegisterFragment> {
                 : "passords do not match";
           },
           decoration: InputDecoration(
-              labelText: "Confirm Password",
-              prefixIcon: Icon(Icons.check),
+            labelText: "Confirm Password",
+            prefixIcon: Icon(Icons.check),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(32.0),
-          child: RaisedButton(
+          child: UiCommon.outlineButton(context,
             onPressed: () {
               doRegister(email.text, username.text, password.text);
             },
-            child: Text("Register"),
+            text: "Register",
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text("Already have an account?"),
         ),
-        FlatButton(
+        UiCommon.flatButton(context,
             onPressed: () {
               if (widget.changeFragment != null) {
                 widget.changeFragment();
               }
             },
-            child: Text("login"))
+            text: "login"),
       ],
     );
   }
 
   void doRegister(String email, String username, String password) async {
-    String error =
-        await widget.onRegisterClicked(email, username, password);
+    String error = await widget.onRegisterClicked(email, username, password);
     if (error != "") {
       // to do
     }

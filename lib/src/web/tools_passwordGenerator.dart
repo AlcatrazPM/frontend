@@ -9,6 +9,22 @@ class PasswordGenerator extends StatefulWidget {
 
 class _PasswordGeneratorState extends State<PasswordGenerator> {
 
+	// date importante
+	String minimumNumbers;
+	String minimumSpecial;
+	String length;
+	String generatedPassword;
+
+	@override
+	void initState() {
+		super.initState();
+		minimumNumbers = '';
+		minimumSpecial = '';
+		length = '';
+		generatedPassword = '';
+	}
+
+
 	// culori folosite
 	Color my_grey = Colors.grey[300];
 	Color light_blue = Colors.lightBlueAccent[100];
@@ -35,6 +51,20 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
 				labelText: title,
 				border: OutlineInputBorder(borderSide: BorderSide(color: theme_color)),
 			),
+			onChanged: (String input_user) {
+				setState(() {
+				  switch (title) {
+					  case 'Minimum numbers':
+					  	minimumNumbers = input_user;
+					  	break;
+					  case 'Minimum special':
+					  	minimumSpecial = input_user;
+					  	break;
+					  case 'Length':
+					  	length = input_user;
+				  }
+				});
+			},
 		);
 	}
 
@@ -163,6 +193,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
 						      padding: const EdgeInsets.only(left: 40, right: 40),
 						      child: RaisedButton(
 						          color: theme_color,
+							      splashColor: Colors.yellow,
 						          child: Text('REGENERATE', style: TextStyle(fontWeight: FontWeight.bold, color: white),),
 						          onPressed: () {},
 						      ),

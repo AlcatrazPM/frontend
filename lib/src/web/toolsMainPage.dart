@@ -23,6 +23,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 		super.initState();
 	}
 
+
 	Widget ToolsPrompt() {
 		return Padding(
 			padding: const EdgeInsets.only(left: 20.0, top: 60.0, right: 20.0),
@@ -32,7 +33,9 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 					shape: BoxShape.rectangle,
 					borderRadius: BorderRadius.circular(8.0),
 
-					border: Border.all(color: Colors.black),
+					border: Border.all(
+						width: 2,
+						color: Colors.blue),
 				),
 				child: Column (
 					children: <Widget>[
@@ -51,7 +54,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 						),
 						Divider(height: 3, thickness: 3,),
 						Padding(
-							padding: const EdgeInsets.only( top: 8.0, left: 2.0, right: 2.0),
+							padding: const EdgeInsets.only( top: 8.0, right: 0.5),
 							child: FlatButton(
 								child: Row (
 									children: <Widget>[
@@ -68,7 +71,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 							),
 						),
 						Padding(
-							padding: const EdgeInsets.only( top: 8.0, left: 2.0, right: 2.0),
+							padding: const EdgeInsets.only( top: 8.0, right: 0.5),
 							child: FlatButton(
 								color: isExportVaultPage ? Colors.blue : Colors.white70,
 								child: Row (

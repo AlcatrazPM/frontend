@@ -48,29 +48,40 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
   Widget build(BuildContext context) {
     //var screen_width = MediaQuery.of(context).size.width;
     //var screen_height = MediaQuery.of(context).size.height;
-    return Container(
-      width: boxWidth,
-      height: boxHeight,
-      //color: Colors.black,
-      decoration: BoxDecoration (
-        border: Border.all(),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded (
-            flex: 1,
-            child: Column (
-              children: <Widget>[
-                ToolsPrompt(),
-              ],
+    return Center(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: boxWidth,
+              height: boxHeight,
+              //color: Colors.black,
+              decoration: BoxDecoration (
+                border: Border.all(),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Expanded (
+                    flex: 1,
+                    child: Column (
+                      children: <Widget>[
+                        ToolsPrompt(),
+                      ],
+                    ),
+                  ),
+                  Expanded (
+                    flex: 3,
+                    child: ExportVault(),
+                  ),
+                ],
+
+              ),
             ),
           ),
-          Expanded (
-            flex: 3,
-            child: ExportVault(),
-          ),
-        ],
-
+        ),
       ),
     );
   }

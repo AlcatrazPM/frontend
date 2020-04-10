@@ -31,6 +31,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            !kIsWeb? Container() :
             IconButton(
               onPressed: (){
                 Navigator.of(context, rootNavigator: true).pop();

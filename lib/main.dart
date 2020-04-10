@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 
 import 'src/auth/ui/AuthScreen.dart';
 
-void main() => runApp(MyApp());
+
+void main() {
+
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -22,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: EcranJmek(),
+      home: AuthScreen(),
     );
   }
 }

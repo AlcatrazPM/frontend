@@ -8,6 +8,11 @@ enum CriptoType {
   RandomOrg
 }
 
+enum ExportType {
+  Json,
+  Csv
+}
+
 class ExportVault extends StatefulWidget {
 
   @override
@@ -19,15 +24,26 @@ class _ExportVaultState extends State<ExportVault> {
 
   CriptoType _selectedCripto;
   List<DropdownMenuItem<CriptoType>> listaCripto;
+
+  ExportType _selectedExport;
+  List<DropdownMenuItem<ExportType>> listaExportType;
+
   String masterPasswordString;
 
   @override
   void initState() {
+    //To remove these....
     _selectedCripto = CriptoType.DaCuZaru;
     listaCripto = new List<DropdownMenuItem<CriptoType>>();
     listaCripto.add(DropdownMenuItem(value: CriptoType.DaCuZaru, child: Text("DaCuZaru"),));
     listaCripto.add(DropdownMenuItem(value: CriptoType.DaCuBanu, child: Text("DaCuBanu"),));
     listaCripto.add(DropdownMenuItem(value: CriptoType.RandomOrg, child: Text("RandomOrg"),));
+    //untill here....
+    _selectedExport = ExportType.Json;
+    listaExportType = new List<DropdownMenuItem<ExportType>>();
+    listaExportType.add(DropdownMenuItem(value: ExportType.Json, child: Text("JSON"),));
+    listaExportType.add(DropdownMenuItem(value: ExportType.Csv, child: Text("CSV"),));
+
     masterPasswordString = '';
     super.initState();
   }
@@ -47,7 +63,7 @@ class _ExportVaultState extends State<ExportVault> {
       onChanged: (String stringNou){
         setState(() {
           masterPasswordString = stringNou;
-          print(masterPasswordString);
+          //print(masterPasswordString);
         });
       },
       obscureText: true,
@@ -106,12 +122,12 @@ class _ExportVaultState extends State<ExportVault> {
                   decoration: InputDecoration (
                     labelText: "Please select cripting method",
                   ),
-                  value: _selectedCripto,
-                  items: listaCripto,
+                  value: _selectedExport,
+                  items: listaExportType,
                   hint: Text("This is a hint."),
-                  onChanged: (CriptoType nouAles){
+                  onChanged: (ExportType nouAles){
                     setState(() {
-                      _selectedCripto = nouAles;
+                      _selectedExport = nouAles;
                     });
                   },
                 ),
@@ -132,7 +148,9 @@ class _ExportVaultState extends State<ExportVault> {
             child: Text (
               "Export"
             ),
-            onPressed: (){},
+            onPressed: (){
+              submitExport(masterPasswordString, _selectedExport);
+            },
             color: Colors.blueAccent,
             splashColor: Colors.yellow,
             textColor: Colors.white,
@@ -140,5 +158,10 @@ class _ExportVaultState extends State<ExportVault> {
         ),
       ],
     );
+  }
+
+  //BACKEND---------------------------------------------
+  Future<String> submitExport(String masterPassword, ExportType tipExp) async {
+    return "Va pup, frumosilor.\n";
   }
 }

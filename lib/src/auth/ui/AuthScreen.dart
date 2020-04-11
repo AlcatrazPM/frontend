@@ -131,7 +131,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  "Alkatraz PM",
+                                  "Alcatraz PM",
                                   style: TextStyle(
                                       fontSize: 30, color: Colors.white),
                                 ),

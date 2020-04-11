@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ip_etapa2/PasswordAttributes.dart';
 
 class PasswordGenerator extends StatefulWidget {
@@ -221,7 +222,9 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
 							  padding: const EdgeInsets.only(left: 40, right: 40),
 						    child: FlatButton(
 						    	child: Text('COPY', style: TextStyle(fontWeight: FontWeight.bold, color: theme_color),),
-						    	onPressed: () {},
+						    	onPressed: () {
+						    		Clipboard.setData(ClipboardData(text: generatedPassword));
+							    },
 						    ),
 						  ),
 						),

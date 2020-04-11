@@ -6,12 +6,16 @@ class PasswordAttributes {
   bool hasUpperCase;
   bool hasNumbers;
   bool hasSpecialChars;
-  String omittedChars;
+  int minNumbers;
+  int minSpecial;
+  int length;
 
   PasswordAttributes(
       {this.hasLowerCase = true,
       this.hasUpperCase = true,
       this.hasNumbers = true,
       this.hasSpecialChars = true,
-      this.omittedChars = ""});
+      this.minNumbers = 0,
+      this.minSpecial = 0,
+      this.length = 12});
 }

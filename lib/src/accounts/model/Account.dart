@@ -2,5 +2,6 @@ class Account{
   String password;
   String username;
   String website;
-  Account(this.website, this.username, this.password);
+  bool isFavorite;
+  Account(this.website, this.username, this.password, this.isFavorite);
 }

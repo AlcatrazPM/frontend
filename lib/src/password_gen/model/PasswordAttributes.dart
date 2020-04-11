@@ -1,4 +1,3 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 /// models the attributes a class should have or not
 class PasswordAttributes {

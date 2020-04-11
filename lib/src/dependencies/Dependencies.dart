@@ -1,8 +1,16 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper, jsonSerializable;
+import 'package:alkatrazpm/src/auth/service/AuthService.dart';
+import 'package:alkatrazpm/src/auth/service/DefaultAuthService.dart';
+import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 
-import 'package:alkatrazpm/main.reflectable.dart' show initializeReflectable;
+GetIt deps = GetIt.instance;
 
+initAllDependencies() {
 
-initAllDependencies(){
-  initializeReflectable();
+  String apiBase = "https://5e8eebaffe7f2a00165eeb93.mockapi.io/Ar";
+  Dio dio = Dio(BaseOptions(baseUrl: apiBase));
+
+  deps.registerSingleton<AuthService>(DefaultAuthService(dio));
+
+  deps.registerSingleton<Dio>(dio);
 }

@@ -1,3 +1,5 @@
+import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 import 'package:alkatrazpm/src/accounts/ui/AccountDetailsScreen.dart';
 import 'package:alkatrazpm/src/accounts/ui/AddAcountDialog.dart';
 import 'package:alkatrazpm/src/accounts/ui/Menu.dart';
@@ -217,4 +219,10 @@ class AccountsListScreen extends StatelessWidget {
             builder: (ctx) =>
                 AccountDetailsScreen(websiteTag)));
   }
+  Future<String> addAccount(Account account)async{
+    //return Future.value("eroare");
+    // AICI scriu eu
+  }
+
+
 }

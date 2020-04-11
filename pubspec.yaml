@@ -31,14 +31,17 @@ dependencies:
   get_it: ^4.0.1
   #user preferences
   shared_preferences: ^0.5.6+3
-  #json mapper
-  dart_json_mapper: ^1.5.6
+
+  json_annotation: ^3.0.0
+
+  #sane snackbar
+  flushbar: ^1.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner:
-
+  build_runner: ^1.0.0
+  json_serializable: ^3.2.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

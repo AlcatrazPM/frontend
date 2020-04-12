@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ip_etapa2/PasswordAttributes.dart';
 
-class PasswordGenerator extends StatefulWidget {
+import 'PasswordGen.dart';
+
+class PasswordGeneratorWidget extends StatefulWidget {
 
 	@override
 	_PasswordGeneratorState createState() => _PasswordGeneratorState();
 }
 
 
-class _PasswordGeneratorState extends State<PasswordGenerator> {
+class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
 
 	// date importante
 	String minimumNumbers;
@@ -302,7 +304,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
 	Future<String> onRegeneratePassword(PasswordAttributes passAttr) async {
 
 		// treaba de backend
-
-		return 'noua parola generata';
+		String genrated_pass = PasswordGenerator.generatePassword(passAttr);
+		return genrated_pass;
 	}
 }

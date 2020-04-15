@@ -99,11 +99,13 @@ class _MyAccountState extends State<MyAccount> {
 				  	color: theme_color,
 				  	splashColor: Colors.yellow,
 				  	child: Text('SAVE', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-				  	onPressed: () {},
+				  	onPressed: () {
+
+				  		// trebuie sa dau mai departe _masterPassword.text si _newEmail.text
+					    onChangeEmail(_masterPassword.text, _newEmail.text);
+				    },
 				  ),
 				),
-
-
 
 
 				// Change Master Password title
@@ -151,7 +153,11 @@ class _MyAccountState extends State<MyAccount> {
 						color: theme_color,
 						splashColor: Colors.yellow,
 						child: Text('SAVE', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-						onPressed: () {},
+						onPressed: () {
+
+							// trebuie sa trimit mai departe _currentMasterPassword.text _newMasterPassword.text _confirmNewMasterPassword.text
+							onChangeMasterPassword(_currentMasterPassword.text, _newMasterPassword.text, _confirmNewMasterPassword.text);
+						},
 					),
 				),
 
@@ -159,4 +165,15 @@ class _MyAccountState extends State<MyAccount> {
 		);
 
 	}
+
+	////////////////////////////////////////////
+	void onChangeEmail(String masterPassword, String newEmail) {
+
+	}
+
+	void onChangeMasterPassword(String currentMasterPassword, String newMasterPassword, String confirmNewMasterPassword) {
+
+	}
+
+
 }

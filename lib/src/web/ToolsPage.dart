@@ -21,7 +21,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 
 	@override
 	void initState() {
-		isExportVaultPage = true;
+		isExportVaultPage = false;
 		super.initState();
 	}
 

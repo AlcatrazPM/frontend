@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'Account.dart';
 import 'SettingsPage.dart';
+import 'Tabs.dart';
 import 'ToolsPage.dart';
 import 'VaultPage.dart';
 
@@ -28,12 +29,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-
-      //home: TextWidget(),
-      //home: LogInPage(),
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
-          body: BetterVault()),
+         // body: BetterVault()),
+         // body: ToolsMainPage()),
+    //  body: SettingsPage()),
+      body: CustomTabBar()),
     );
   }
 }

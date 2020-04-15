@@ -21,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
 	@override
 	void initState() {
-		isMyAccountPage = false;
+		isMyAccountPage = true;
 		super.initState();
 	}
 

@@ -305,6 +305,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
 
 		// treaba de backend
 		String genrated_pass = PasswordGenerator.generatePassword(passAttr);
+
 		return genrated_pass;
 	}
 }

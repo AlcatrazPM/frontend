@@ -2,6 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'OptionsSettings.dart';
+import 'settings_MyAccount.dart';
+
 class SettingsPage extends StatefulWidget {
 
   @override
@@ -17,7 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    isMyAccountPage = true;
+    isMyAccountPage = false;
     super.initState();
   }
 
@@ -52,11 +55,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   Expanded (
                     flex: 3,
                     child: Container(
-                      color: Colors.blue,
+                      //color: Colors.blue,
                       child: Column (
                         children: <Widget>[
                           ////////////////////////////////////////////////////////////////////////////@ALEXANDRAA, eu fac Options.
-                          isMyAccountPage ? Text("Pagina My Account") : Text("Pagina Options"),
+                          isMyAccountPage ? MyAccount() : OptionsSettings(),
                         ],
                       ),
                     ),

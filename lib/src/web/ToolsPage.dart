@@ -1,4 +1,4 @@
-import 'package:ip_etapa2/Tools_PasswordGenerator.dart';
+import 'package:alkatrazpm/src/web/Tools_PasswordGenerator.dart';
 
 import 'Tools_Export.dart';
 
@@ -112,7 +112,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
 							height: boxHeight,
 							//color: Colors.black,
 							decoration: BoxDecoration (
-								border: Border.all(),
+//								border: Border.all(),
 							),
 							////////Here starts the real stuff
 							child: Row(

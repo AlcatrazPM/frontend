@@ -74,6 +74,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
 					),
 
 					body: TabBarView(
+						physics: NeverScrollableScrollPhysics(),
 						children: [
 							Tab(child: BetterVault(),),
 							Tab(child: ToolsMainPage(),),

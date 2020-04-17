@@ -14,7 +14,7 @@ class DefaultAuthService implements AuthService {
     try {
       var response =
           await _dio.post("/login", data: credentials.toJson());
-      if(response.statusCode == 201) {
+      if(response.statusCode == 200) {
         print(response.data);
         print(response.data.toString());
         AuthResponse authResponse = AuthResponse.fromJson(response.data);

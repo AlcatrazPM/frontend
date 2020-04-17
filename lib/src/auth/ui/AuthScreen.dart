@@ -8,6 +8,7 @@ import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
+import 'package:alkatrazpm/src/web/Tabs.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -227,8 +228,8 @@ class _AuthScreenState extends State<AuthScreen> {
       var user = await deps.get<AuthService>().login(credentials);
       print(user.email);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-        //return kIsWeb? CustomTabBar() : AccountsListScreen();
-        return kIsWeb ? MainPageWeb() : AccountsListScreen();
+        return kIsWeb? CustomTabBar() : AccountsListScreen();
+//        return kIsWeb ? MainPageWeb() : AccountsListScreen();
       }));
       return Future.value();
     } catch (e) {

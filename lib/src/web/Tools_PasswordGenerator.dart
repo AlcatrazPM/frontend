@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ip_etapa2/PasswordAttributes.dart';
+import 'package:alkatrazpm/src/password_gen/model/PasswordAttributes.dart';
 
-import 'PasswordGen.dart';
+import 'package:alkatrazpm/src/password_gen/PasswordGen.dart';
 
 class PasswordGeneratorWidget extends StatefulWidget {
 
@@ -203,7 +203,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
 										setState(() {
 											PasswordAttributes passAttr = new PasswordAttributes(hasLowerCase: switch_az,
 												hasUpperCase: switch_AZ, hasNumbers: switch_09, hasSpecialChars: switch_others,
-												length: length == '' ? 0 : int.parse(length),
+												length: length == '' ? 12 : int.parse(length),
 												minNumbers: minimumNumbers == '' ? 0 : int.parse(minimumNumbers),
 												minSpecial: minimumSpecial == '' ? 0 : int.parse(minimumSpecial));
 
@@ -252,7 +252,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
 							child: Padding(
 								padding: const EdgeInsets.all(8.0),
 								child: DataField('Minimum special'),
-							)
+							),
 						),
 					],
 				),

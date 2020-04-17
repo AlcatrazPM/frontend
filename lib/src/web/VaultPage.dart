@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'Account.dart';
-import 'AccountsFilter.dart';
+import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 
 class BetterVault extends StatefulWidget {
 

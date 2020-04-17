@@ -37,6 +37,9 @@ dependencies:
   #sane snackbar
   flushbar: ^1.5.0
 
+  #hashing library
+  crypto: ^2.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

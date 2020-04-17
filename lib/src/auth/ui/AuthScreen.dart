@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -13,6 +14,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
 
 import 'LoginFragment.dart';
 import 'RegisterFragment.dart';
@@ -223,6 +225,15 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<String> changeMail(String sdf, String df) async {}
 
   Future<void> onLogin(String email, String password) async {
+//    print(email);
+//
+//    var bytes = utf8.encode(password);
+//    var hash = sha512.convert(bytes);
+//
+//    for (int i = 0; i < 99; i++) {
+//      hash = sha512.convert(hash.bytes);
+//    }
+
     var credentials = AuthCredentials.login(email, password);
     try {
       var user = await deps.get<AuthService>().login(credentials);

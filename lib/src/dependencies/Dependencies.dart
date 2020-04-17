@@ -7,8 +7,9 @@ GetIt deps = GetIt.instance;
 
 initAllDependencies() {
 
-//  String apiBase = "https://5e8eebaffe7f2a00165eeb93.mockapi.io/Ar";
-  String apiBase = "https://dorel.free.beeceptor.com";
+  String apiBase = "https://5e8eebaffe7f2a00165eeb93.mockapi.io/Ar";
+//  String apiBase = "https://dorel.free.beeceptor.com";
+//  String apiBase = "http://localhost:8082";
 
   Dio dio = Dio(BaseOptions(baseUrl: apiBase));
 

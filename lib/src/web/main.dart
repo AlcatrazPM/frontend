@@ -11,6 +11,9 @@ void main() {
   runApp(MyApp());
 }
 
+// SHOLD NOT BE USED. LEFT FOR REFERENCE
+// PLEASE USE LIB/MAIN.DART
+
 class MyApp extends StatelessWidget {
 
   Account _account;

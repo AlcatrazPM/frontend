@@ -63,7 +63,7 @@ class _LoginFragmentState extends State<LoginFragment> {
           child: UiCommon.outlineButton(
             context,
             onPressed: () {
-              doLogin(context, password.text, username.text);
+              doLogin(context, username.text, password.text);
             },
             text: "Login",
           ),

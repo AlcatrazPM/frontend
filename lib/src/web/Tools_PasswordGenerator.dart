@@ -11,18 +11,18 @@ class PasswordGeneratorWidget extends StatefulWidget {
 
 class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   // date importante
-  String minimumNumbers;
-  String minimumSpecial;
-  String length;
   String generatedPassword;
+  PasswordAttributes passwordAttributes;
 
   @override
   void initState() {
+    passwordAttributes = PasswordAttributes();
+
+    tryRegeneratePassword(passwordAttributes).then((val) => setState(() {
+          generatedPassword = val;
+        }));
+
     super.initState();
-    minimumNumbers = '';
-    minimumSpecial = '';
-    length = '';
-    generatedPassword = '';
   }
 
   // culori folosite
@@ -34,11 +34,17 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   // constante
   final double maxWidth = 600;
 
-  // switchurile de optiuni speciale
-  bool switch_AZ = false;
-  bool switch_az = false;
-  bool switch_09 = false;
-  bool switch_others = false;
+  int _parseField(String text, int defaultValue) {
+    int value = defaultValue;
+
+    try {
+      value = int.parse(text);
+    } catch (e) {
+      // Nothing
+    }
+
+    return value;
+  }
 
   // data field = curtom text form field
   Widget DataField(String title) {
@@ -51,17 +57,22 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
         border: OutlineInputBorder(borderSide: BorderSide(color: theme_color)),
       ),
       onChanged: (String input_user) {
+        input_user.trim();
         setState(() {
           switch (title) {
             case 'Minimum numbers':
-              minimumNumbers = input_user;
+              passwordAttributes.minNumbers = _parseField(input_user, 0);
               break;
             case 'Minimum special':
-              minimumSpecial = input_user;
+              passwordAttributes.minSpecial = _parseField(input_user, 0);
               break;
             case 'Length':
-              length = input_user;
+              passwordAttributes.length = _parseField(input_user, 12);
           }
+
+          tryRegeneratePassword(passwordAttributes).then((val) => setState(() {
+                generatedPassword = val;
+              }));
         });
       },
     );
@@ -82,18 +93,23 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
               setState(() {
                 switch (title) {
                   case 'A-Z':
-                    switch_AZ = value;
+                    passwordAttributes.hasUpperCase = value;
                     break;
                   case 'a-z':
-                    switch_az = value;
+                    passwordAttributes.hasLowerCase = value;
                     break;
                   case '0-9':
-                    switch_09 = value;
+                    passwordAttributes.hasNumbers = value;
                     break;
                   case '!@#\$%^&*':
-                    switch_others = value;
+                    passwordAttributes.hasSpecialChars = value;
                     break;
                 }
+
+                tryRegeneratePassword(passwordAttributes)
+                    .then((val) => setState(() {
+                          generatedPassword = val;
+                        }));
               });
             },
           ),
@@ -110,11 +126,11 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Option('A-Z', switch_AZ),
+              child: Option('A-Z', passwordAttributes.hasUpperCase),
             ),
             Expanded(
               flex: 1,
-              child: Option('0-9', switch_09),
+              child: Option('0-9', passwordAttributes.hasNumbers),
             ),
           ],
         ),
@@ -122,11 +138,11 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Option('a-z', switch_az),
+              child: Option('a-z', passwordAttributes.hasLowerCase),
             ),
             Expanded(
               flex: 1,
-              child: Option('!@#\$%^&*', switch_others),
+              child: Option('!@#\$%^&*', passwordAttributes.hasSpecialChars),
             ),
           ],
         ),
@@ -197,20 +213,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
                   ),
                   onPressed: () {
                     setState(() {
-                      PasswordAttributes passAttr = new PasswordAttributes(
-                          hasLowerCase: switch_az,
-                          hasUpperCase: switch_AZ,
-                          hasNumbers: switch_09,
-                          hasSpecialChars: switch_others,
-                          length: length == '' ? 12 : int.parse(length),
-                          minNumbers: minimumNumbers == ''
-                              ? 0
-                              : int.parse(minimumNumbers),
-                          minSpecial: minimumSpecial == ''
-                              ? 0
-                              : int.parse(minimumSpecial));
-
-                      tryRegeneratePassword(passAttr)
+                      tryRegeneratePassword(passwordAttributes)
                           .then((val) => setState(() {
                                 generatedPassword = val;
                               }));

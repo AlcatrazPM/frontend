@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-import 'Account.dart';
+import 'package:alkatrazpm/src/accounts/model/Account.dart';
 import 'SettingsPage.dart';
 import 'Tabs.dart';
 import 'ToolsPage.dart';

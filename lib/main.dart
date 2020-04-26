@@ -5,6 +5,7 @@ import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'src/auth/ui/AuthScreen.dart';
+import 'src/web/Tabs.dart';
 
 void main() {
   initAllDependencies();
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: AuthScreen(),
+      //home: AuthScreen(),
+      home: CustomTabBar(),
     );
   }
 }

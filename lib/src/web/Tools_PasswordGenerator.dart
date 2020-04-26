@@ -11,7 +11,7 @@ class PasswordGeneratorWidget extends StatefulWidget {
 
 class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   // date importante
-  String generatedPassword;
+  String generatedPassword = "";
   PasswordAttributes passwordAttributes;
 
   @override

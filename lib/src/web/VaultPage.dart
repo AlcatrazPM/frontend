@@ -66,7 +66,7 @@ class _BetterVaultState extends State<BetterVault> {
               width: boxWidth,
               height: boxHeight,
               decoration: BoxDecoration(
-                border: Border.all(),
+               // border: Border.all(),
               ),
               child: Row(
                 children: <Widget>[
@@ -89,10 +89,11 @@ class _BetterVaultState extends State<BetterVault> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          // title
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, top: 50.0),
-                            child: getHeading("VAULT", context),
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
+                            child: getTitle('Vault'),
                           ),
                           Divider(
                             height: 3.0,
@@ -216,7 +217,7 @@ class _BetterVaultState extends State<BetterVault> {
     return Text(
       tit,
       style: TextStyle(
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.8,
       ),

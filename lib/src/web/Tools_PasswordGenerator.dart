@@ -33,6 +33,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
 
   // constante
   final double maxWidth = 600;
+  double topTitlePadding = 10.0;
 
   int _parseField(String text, int defaultValue) {
     int value = defaultValue;
@@ -75,6 +76,17 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
               }));
         });
       },
+    );
+  }
+
+  Widget getTitle(String tit) {
+    return Text(
+      tit,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.8,
+      ),
     );
   }
 
@@ -155,25 +167,19 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        // title
 
+        // title
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Password Generator',
-            textScaleFactor: 1.7,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
+          child: getTitle('Password Generator'),
         ),
 
+
         // linie de despartire
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Divider(
-            color: my_grey,
-            height: 2,
-            thickness: 5,
-          ),
+        Divider(
+          height: 3.0,
+          thickness: 2.0,
         ),
 
         // afisare parola generata
@@ -203,7 +209,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(left: 40, right: 40),
+                padding: const EdgeInsets.only(left: 8, right: 8),
                 child: RaisedButton(
                   color: theme_color,
                   splashColor: Colors.yellow,

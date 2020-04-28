@@ -12,7 +12,8 @@ class ExportVault extends StatefulWidget {
 }
 
 class _ExportVaultState extends State<ExportVault> {
-  double leftPadding = 32.0;
+  double leftPadding = 8.0;
+  double topTitlePadding = 8.0;
 
   CriptoType _selectedCripto;
   List<DropdownMenuItem<CriptoType>> listaCripto;
@@ -77,21 +78,28 @@ class _ExportVaultState extends State<ExportVault> {
     );
   }
 
+  Widget getTitle(String tit) {
+    return Text(
+      tit,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.8,
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+
+        // title
         Padding(
-          padding: EdgeInsets.only(top: 16.0, left: leftPadding),
-          child: Text(
-            "Export Vault",
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w500,
-              color: Colors.black54,
-            ),
-          ),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
+          child: getTitle('Export Vault'),
         ),
 
         Divider(

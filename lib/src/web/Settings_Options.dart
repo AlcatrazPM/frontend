@@ -26,7 +26,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
 
   @override
   void initState() {
-    leftPadding = 32.0;
+    leftPadding = 8.0;
     _selectedTime = getUserSelectedTime();
 
     _masterPassword = new TextEditingController();
@@ -62,6 +62,9 @@ class _OptionsSettingsState extends State<OptionsSettings> {
     super.initState();
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +72,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(left: 50.0, top: 58.0),
+          padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
           child: getHeading("Options", context),
         ),
         Divider(
@@ -81,7 +84,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
             Expanded(
               flex: 4,
               child: Padding(
-                padding: EdgeInsets.all(leftPadding),
+                padding: EdgeInsets.all(8.0),
                 child: DropdownButtonFormField(
                   decoration: InputDecoration(
                     labelText: "Lock Options",
@@ -107,14 +110,17 @@ class _OptionsSettingsState extends State<OptionsSettings> {
         ),
 
         ///////////////////Here is my button
-        createButton("SAVE", () {
-          setState(() {
-            onSaveLockOptions(_selectedTime);
-          });
-        }),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 8.0),
+          child: createButton("SAVE", () {
+            setState(() {
+              onSaveLockOptions(_selectedTime);
+            });
+          }),
+        ),
 
         Container(
-          padding: EdgeInsets.only(left: leftPadding, top: leftPadding),
+          padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 20.0),
           child: getHeading("Encryption Key Settings", context),
         ),
         Divider(
@@ -123,7 +129,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
         ),
 
         Container(
-          padding: EdgeInsets.only(left: leftPadding, top: leftPadding),
+          padding: EdgeInsets.only(left: 8.0, top: leftPadding),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -146,15 +152,18 @@ class _OptionsSettingsState extends State<OptionsSettings> {
         }, _selectedAlgo, listCriptoType, "KDF Algorithm", "KDF Iterations",
             _kdfIterations),
         ///////////////////////////end of createKDF
-        createButton("SAVE", () {
-          if (isValid == true) {
-            setState(() {
-              onSaveKDF();
-            });
-          } else {
-            print("Nu are voie sa apese\n");
-          }
-        })
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: createButton("SAVE", () {
+            if (isValid == true) {
+              setState(() {
+                onSaveKDF();
+              });
+            } else {
+              print("Nu are voie sa apese\n");
+            }
+          }),
+        )
       ],
     );
   }
@@ -192,7 +201,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
   Widget createKDF(func(var x), var value, List itms, String titleAlgo,
       String titleIterations, TextEditingController _control) {
     return Padding(
-      padding: EdgeInsets.all(leftPadding),
+      padding: EdgeInsets.all(16.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -266,7 +275,7 @@ class _OptionsSettingsState extends State<OptionsSettings> {
     return Text(
       tit,
       style: TextStyle(
-        fontSize: 30,
+        fontSize: 24,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.8,
       ),

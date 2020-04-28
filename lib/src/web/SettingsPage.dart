@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: boxHeight,
               width: boxWidth,
               decoration: BoxDecoration(
-                border: Border.all(),
+              //  border: Border.all(),
               ),
               child: Row(
                 children: <Widget>[

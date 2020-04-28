@@ -34,14 +34,15 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
         child: Column(
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 15, top: 8),
                   child: Text(
-                    "Tools",
+                    "TOOLS",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -52,15 +53,19 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
               thickness: 3,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, right: 0.5),
+              padding: const EdgeInsets.only(top: 8.0, right: 0.5, bottom: 0.0),
               child: FlatButton(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.storage),
-                    Text("Password Manager"),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Password Manager"),
+                    ),
                   ],
                 ),
-                color: isExportVaultPage ? Colors.white70 : Colors.blue,
+                //color: isExportVaultPage ? Colors.white70 : Colors.blue,
                 onPressed: () {
                   setState(() {
                     isExportVaultPage = false;
@@ -69,13 +74,17 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, right: 0.5),
+              padding: const EdgeInsets.only(top: 5.0, right: 0.5),
               child: FlatButton(
-                color: isExportVaultPage ? Colors.blue : Colors.white70,
+               // color: isExportVaultPage ? Colors.blue : Colors.white70,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.import_export),
-                    Text("Export Vault"),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("Export Vault"),
+                    ),
                   ],
                 ),
                 onPressed: () {
@@ -90,6 +99,8 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
       ),
     );
   }
+
+
 
   Widget build(BuildContext context) {
     //var screen_width = MediaQuery.of(context).size.width;

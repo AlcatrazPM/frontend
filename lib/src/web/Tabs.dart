@@ -54,20 +54,26 @@ class _CustomTabBarState extends State<CustomTabBar> {
                   flex: 3,
                   child: TabBar(
                     tabs: [
-                      Text(
-                        'Vault',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Tab(
+                        child: Text(
+                          'Vault',
+                          textScaleFactor: 1.2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Text(
-                        'Tools',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Tab(
+                        child: Text(
+                          'Tools',
+                          textScaleFactor: 1.2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Text(
-                        'Settings',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Tab(
+                        child: Text(
+                          'Settings',
+                          textScaleFactor: 1.2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),

@@ -229,6 +229,11 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
               ),
             ),
 
+//            Expanded(
+//              flex: 1,
+//              child: Text('alexandra'),
+//            ),
+
             // COPY
             Expanded(
               flex: 1,

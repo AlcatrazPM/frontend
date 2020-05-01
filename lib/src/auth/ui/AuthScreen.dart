@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:alkatrazpm/src/accounts/ui/AccountsListScreen.dart';
 import 'package:alkatrazpm/src/accounts/ui/MainPageWeb.dart';
 import 'package:alkatrazpm/src/auth/model/AuthCredentials.dart';
+import 'package:alkatrazpm/src/auth/model/User.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
@@ -32,6 +33,25 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<User>(builder: (context, snapshot){
+
+      if(snapshot.hasData && snapshot.data == null) {
+        return UiUtils.isMobile(context) ? mobile(context) : web(context);
+      }else{
+       Future.delayed(Duration(seconds: 1), (){
+         if(kIsWeb){
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+           => CustomTabBar()));
+         }else{
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+           => AccountsListScreen()));
+         }
+       });
+        return Container();
+      }
+    },
+      future: deps.get<AuthService>().loggedUser(),
+    );
     return UiUtils.isMobile(context) ? mobile(context) : web(context);
   }
 

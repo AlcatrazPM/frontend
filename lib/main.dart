@@ -3,10 +3,10 @@ import 'package:alkatrazpm/src/accounts/ui/EcranJmek.dart';
 import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
-import 'package:alkatrazpm/src/web/tabs.dart';
 import 'package:flutter/material.dart';
 
 import 'src/auth/ui/AuthScreen.dart';
+import 'src/web/Tabs.dart';
 
 void main() {
   initAllDependencies();
@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: AuthScreen(),
+      //home: CustomTabBar(),
     );
   }
 }

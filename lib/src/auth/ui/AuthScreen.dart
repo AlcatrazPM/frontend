@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -10,10 +11,12 @@ import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
 import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
+import 'package:alkatrazpm/src/web/Tabs.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
 
 import 'LoginFragment.dart';
 import 'RegisterFragment.dart';
@@ -207,13 +210,22 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<String> changeMail(String sdf, String df) async {}
 
   Future<void> onLogin(String email, String password) async {
+//    print(email);
+//
+//    var bytes = utf8.encode(password);
+//    var hash = sha512.convert(bytes);
+//
+//    for (int i = 0; i < 99; i++) {
+//      hash = sha512.convert(hash.bytes);
+//    }
+
     var credentials = AuthCredentials.login(email, password);
     try {
       var user = await deps.get<AuthService>().login(credentials);
       print(user.email);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-        //return kIsWeb? CustomTabBar() : AccountsListScreen();
-        return kIsWeb ? MainPageWeb() : AccountsListScreen();
+        return kIsWeb? CustomTabBar() : AccountsListScreen();
+//        return kIsWeb ? MainPageWeb() : AccountsListScreen();
       }));
       return Future.value();
     } catch (e) {

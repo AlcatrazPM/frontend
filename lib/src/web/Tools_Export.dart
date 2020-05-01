@@ -2,25 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum CriptoType {
-  DaCuZaru,
-  DaCuBanu,
-  RandomOrg
-}
+enum CriptoType { DaCuZaru, DaCuBanu, RandomOrg }
 
-enum ExportType {
-  Json,
-  Csv
-}
+enum ExportType { Json, Csv }
 
 class ExportVault extends StatefulWidget {
-
   @override
   _ExportVaultState createState() => _ExportVaultState();
 }
 
 class _ExportVaultState extends State<ExportVault> {
-  double leftPadding = 32.0;
+  double leftPadding = 8.0;
+  double topTitlePadding = 8.0;
 
   CriptoType _selectedCripto;
   List<DropdownMenuItem<CriptoType>> listaCripto;
@@ -35,14 +28,29 @@ class _ExportVaultState extends State<ExportVault> {
     //To remove these....
     _selectedCripto = CriptoType.DaCuZaru;
     listaCripto = new List<DropdownMenuItem<CriptoType>>();
-    listaCripto.add(DropdownMenuItem(value: CriptoType.DaCuZaru, child: Text("DaCuZaru"),));
-    listaCripto.add(DropdownMenuItem(value: CriptoType.DaCuBanu, child: Text("DaCuBanu"),));
-    listaCripto.add(DropdownMenuItem(value: CriptoType.RandomOrg, child: Text("RandomOrg"),));
+    listaCripto.add(DropdownMenuItem(
+      value: CriptoType.DaCuZaru,
+      child: Text("DaCuZaru"),
+    ));
+    listaCripto.add(DropdownMenuItem(
+      value: CriptoType.DaCuBanu,
+      child: Text("DaCuBanu"),
+    ));
+    listaCripto.add(DropdownMenuItem(
+      value: CriptoType.RandomOrg,
+      child: Text("RandomOrg"),
+    ));
     //untill here....
     _selectedExport = ExportType.Json;
     listaExportType = new List<DropdownMenuItem<ExportType>>();
-    listaExportType.add(DropdownMenuItem(value: ExportType.Json, child: Text("JSON"),));
-    listaExportType.add(DropdownMenuItem(value: ExportType.Csv, child: Text("CSV"),));
+    listaExportType.add(DropdownMenuItem(
+      value: ExportType.Json,
+      child: Text("JSON"),
+    ));
+    listaExportType.add(DropdownMenuItem(
+      value: ExportType.Csv,
+      child: Text("CSV"),
+    ));
 
     masterPasswordString = '';
     super.initState();
@@ -60,7 +68,7 @@ class _ExportVaultState extends State<ExportVault> {
         labelText: title,
         border: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
       ),
-      onChanged: (String stringNou){
+      onChanged: (String stringNou) {
         setState(() {
           masterPasswordString = stringNou;
           //print(masterPasswordString);
@@ -70,34 +78,46 @@ class _ExportVaultState extends State<ExportVault> {
     );
   }
 
+  Widget getTitle(String tit) {
+    return Text(
+      tit,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.8,
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
-    return Column (
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+
+        // title
         Padding(
-          padding: EdgeInsets.only(top: 16.0, left: leftPadding),
-          child: Text(
-            "Export Vault",
-            style: TextStyle (
-              fontSize: 40,
-              fontWeight: FontWeight.w500,
-              color: Colors.black54,
-            ),
-          ),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
+          child: getTitle('Export Vault'),
         ),
 
-        Divider(height: 3, thickness: 2,),
+        Divider(
+          height: 3,
+          thickness: 2,
+        ),
 
         Padding(
           padding: EdgeInsets.only(left: leftPadding, top: 20),
-          child: Text("Please enter your Master Password in order to export your vault.\n"),
+          child: Text(
+              "Please enter your Master Password in order to export your vault.\n"),
         ),
 
         //Here you write your password.
         Padding(
-          padding: EdgeInsets.only(left: leftPadding, top: 10, bottom: leftPadding),
-          child: Row (
+          padding:
+              EdgeInsets.only(left: leftPadding, top: 10, bottom: leftPadding),
+          child: Row(
             children: <Widget>[
               Expanded(
                 flex: 4,
@@ -119,13 +139,13 @@ class _ExportVaultState extends State<ExportVault> {
               Expanded(
                 flex: 4,
                 child: DropdownButtonFormField(
-                  decoration: InputDecoration (
+                  decoration: InputDecoration(
                     labelText: "Please select cripting method",
                   ),
                   value: _selectedExport,
                   items: listaExportType,
                   hint: Text("This is a hint."),
-                  onChanged: (ExportType nouAles){
+                  onChanged: (ExportType nouAles) {
                     setState(() {
                       _selectedExport = nouAles;
                     });
@@ -144,11 +164,9 @@ class _ExportVaultState extends State<ExportVault> {
         //Here starts the submit button
         Padding(
           padding: EdgeInsets.only(left: leftPadding, top: 20.0),
-          child: RaisedButton (
-            child: Text (
-              "Export"
-            ),
-            onPressed: (){
+          child: RaisedButton(
+            child: Text("Export"),
+            onPressed: () {
               submitExport(masterPasswordString, _selectedExport);
             },
             color: Colors.blueAccent,

@@ -12,8 +12,8 @@ class PasswordAttributes {
   PasswordAttributes(
       {this.hasLowerCase = true,
       this.hasUpperCase = true,
-      this.hasNumbers = true,
-      this.hasSpecialChars = true,
+      this.hasNumbers = false,
+      this.hasSpecialChars = false,
       this.minNumbers = 0,
       this.minSpecial = 0,
       this.length = 12});

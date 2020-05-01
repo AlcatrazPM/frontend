@@ -35,51 +35,65 @@ class _CustomTabBarState extends State<CustomTabBar> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           bottom: PreferredSize(
-            child: Row(
-              children: <Widget>[
-                // column with logo icon
-                Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: <Widget>[
-                        Icon(
-                          Icons.pets,
-                          color: Colors.white,
-                        )
-                      ],
-                    )),
+            child: Center(
+              child: Container(
+                width: 1000.0,
+                child: Row(
+                  children: <Widget>[
+                    // column with logo icon
+                    Container(
+                      padding: EdgeInsets.only(right: 20.0, left: 20.0),
+                      child: Column(
+                        children: <Widget>[
+                          Icon(
+                            Icons.pets,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    ),
 
-                // column with tabs
-                Expanded(
-                  flex: 3,
-                  child: TabBar(
-                    tabs: [
-                      Text(
-                        'Vault',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    // column with tabs
+                    Container(
+                      width: 300,
+                      child: TabBar(
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              'Vault',
+                              textScaleFactor: 1.2,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'Tools',
+                              textScaleFactor: 1.2,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'Settings',
+                              textScaleFactor: 1.2,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Tools',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+
+                    // column with log out button
+                    Container(
+                      padding: EdgeInsets.only(right: 20.0,),
+                      child: Column(
+                        children: <Widget>[ExitAccountButton(context)],
                       ),
-                      Text(
-                        'Settings',
-                        textScaleFactor: 1.2,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
-                // column with log out button
-                Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: <Widget>[ExitAccountButton(context)],
-                    )),
-              ],
+              ),
             ),
           ),
         ),

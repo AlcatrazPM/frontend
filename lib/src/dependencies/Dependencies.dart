@@ -1,16 +1,32 @@
+import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
+import 'package:alkatrazpm/src/accounts/service/DefaultAccountsService.dart';
+import 'package:alkatrazpm/src/accounts/service/favicon/DefaultFavIconService.dart';
+import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
+import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
+import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptorDio.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/auth/service/DefaultAuthService.dart';
+import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
+import 'package:alkatrazpm/src/crypto/KeysEncryptionDefault.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt deps = GetIt.instance;
 
 initAllDependencies() {
+  var interceptor = LogoutInterceptorDio();
 
-  String apiBase = "https://5e8eebaffe7f2a00165eeb93.mockapi.io/Ar";
-  Dio dio = Dio(BaseOptions(baseUrl: apiBase));
+  Dio authDio = Dio(BaseOptions(baseUrl: "http://34.71.231.1:8082"));
+  authDio.interceptors.add(interceptor);
 
-  deps.registerSingleton<AuthService>(DefaultAuthService(dio));
+  Dio dataDio = Dio(BaseOptions(baseUrl: "http://34.71.231.1:8083"));
+  dataDio.interceptors.add(interceptor);
 
-  deps.registerSingleton<Dio>(dio);
+  deps.registerSingleton<Dio>(dataDio);
+  deps.registerSingleton<LogoutInterceptor>(interceptor);
+  deps.registerSingleton<AuthService>(DefaultAuthService(authDio));
+  deps.registerSingleton<AccountsService>(DefaultAccountsService(dataDio));
+  deps.registerSingleton<KeysEncryption>(KeysEncryptionDefault());
+  deps.registerSingleton<FavIconService>(DefaultFavIconService());
+
 }

@@ -399,7 +399,7 @@ class _BetterVaultState extends State<BetterVault> {
           bottom: 10.0,
           left: 10.0,
         ),
-      ),
+      ),//
       inputFormatters: [
         new LengthLimitingTextInputFormatter(30),
       ],

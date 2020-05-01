@@ -95,7 +95,7 @@ class _BetterVaultState extends State<BetterVault> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
-                            child: getTitle('Vault'),
+                            child: getHeading('Vault', context),
                           ),
                           Divider(
                             height: 3.0,
@@ -425,6 +425,7 @@ class _BetterVaultState extends State<BetterVault> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: AlertDialog(
+                  contentPadding: EdgeInsets.all(0.0),
                   //title: Text(account.password),
                   content: Container(
                     width: 400,
@@ -433,12 +434,49 @@ class _BetterVaultState extends State<BetterVault> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+
+                        // butonul de CANCEL
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, top:8.0, bottom: 8.0, right: 16.0),
+                          child: SizedBox(
+                            height: 25,
+                            child: Row(
+                              children: <Widget>[
+
+                               Spacer(),
+
+                                //Icon(Icons.cancel),
+
+                                // buton de cancel
+                                Container(
+                                  padding: EdgeInsets.all(0.0),
+                                  width: 25,
+                                  child: FlatButton(
+                                    padding: EdgeInsets.all(0.0),
+                                    color: Colors.redAccent,
+                                    splashColor: Colors.red,
+                                    child: Icon(Icons.close, color: Colors.white,),
+                                    onPressed: () {
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+
+
                         // title
                         Row(
                           children: <Widget>[
+
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 8.0, top: 8.0),
+                                  const EdgeInsets.only(left: 16.0),
                               child: isCreating == true
                                   ? Text(
                                       'Add Account',
@@ -448,13 +486,14 @@ class _BetterVaultState extends State<BetterVault> {
                             ),
                             Spacer(),
                             Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
+                              padding: const EdgeInsets.only(right: 16.0),
                               child: account.isFavorite
                                   ? Icon(Icons.favorite)
                                   : Icon(Icons.favorite_border),
                             ),
                           ],
                         ),
+
                         // departitor
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -467,11 +506,11 @@ class _BetterVaultState extends State<BetterVault> {
 
                         // webpage
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                           child: Text('Website'),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
                           child: SizedBox(
                               width: 300,
                               height: 35,
@@ -481,11 +520,11 @@ class _BetterVaultState extends State<BetterVault> {
 
                         // username
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                           child: Text('Username'),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
                           child: SizedBox(
                               width: 300,
                               height: 35,
@@ -495,11 +534,11 @@ class _BetterVaultState extends State<BetterVault> {
 
                         // password
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                           child: Text('Password'),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
                           child: SizedBox(
                               width: 300,
                               height: 35,
@@ -511,32 +550,36 @@ class _BetterVaultState extends State<BetterVault> {
 
                         Row(
                           children: <Widget>[
+                            
                             // buton de save
-                            RaisedButton(
-                              color: theme_color,
-                              splashColor: Colors.yellow,
-                              child: Text(
-                                'SAVE',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0, bottom:8.0),
+                              child: RaisedButton(
+                                color: theme_color,
+                                splashColor: Colors.yellow,
+                                child: Text(
+                                  'SAVE',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if (isCreating == false) {
+                                      onChangesSaved(account);
+                                    } else {
+                                      onAccountCreation();
+                                    }
+                                    Navigator.pop(context);
+                                  });
+                                },
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  if (isCreating == false) {
-                                    onChangesSaved(account);
-                                  } else {
-                                    onAccountCreation();
-                                  }
-                                  Navigator.pop(context);
-                                });
-                              },
                             ),
 
                             Spacer(),
 
                             Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: FlatButton(
                                 color: Colors.white,
                                 child: Row(
@@ -561,22 +604,7 @@ class _BetterVaultState extends State<BetterVault> {
                               ),
                             ),
 
-                            // buton de cancel
-                            RaisedButton(
-                              color: theme_color,
-                              splashColor: Colors.yellow,
-                              child: Text(
-                                'CANCEL',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  Navigator.pop(context);
-                                });
-                              },
-                            ),
+
                           ],
                         ),
 

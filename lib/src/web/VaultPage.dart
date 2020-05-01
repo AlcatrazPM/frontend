@@ -445,8 +445,6 @@ class _BetterVaultState extends State<BetterVault> {
 
                                Spacer(),
 
-                                //Icon(Icons.cancel),
-
                                 // buton de cancel
                                 Container(
                                   padding: EdgeInsets.all(0.0),

@@ -1,3 +1,7 @@
+import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
+import 'package:alkatrazpm/src/auth/service/AuthService.dart';
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -165,8 +169,8 @@ class _MyAccountState extends State<MyAccount> {
             ),
             onPressed: () {
               // trebuie sa trimit mai departe _currentMasterPassword.text _newMasterPassword.text _confirmNewMasterPassword.text
-              onChangeMasterPassword(_currentMasterPassword.text,
-                  _newMasterPassword.text, _confirmNewMasterPassword.text);
+              onChangeMasterPassword(
+                  _currentMasterPassword.text, _newMasterPassword.text);
             },
           ),
         ),
@@ -175,8 +179,23 @@ class _MyAccountState extends State<MyAccount> {
   }
 
   ////////////////////////////////////////////
-  void onChangeEmail(String masterPassword, String newEmail) {}
+  Future<void> onChangeEmail(String masterPassword, String newEmail) async {
+    try {
+      await deps.get<AuthService>().modifyEmail(newEmail);
+      SnackBarUtils.showConfirmation(context, "Email changed");
+    } catch (e) {
+      SnackBarUtils.showError(context, "of f**k");
+    }
+  }
 
-  void onChangeMasterPassword(String currentMasterPassword,
-      String newMasterPassword, String confirmNewMasterPassword) {}
+  void onChangeMasterPassword(String oldPassword, String newPassword) async {
+    try {
+      await deps
+          .get<AuthService>()
+          .modifyMasterPassword(oldPassword, newPassword);
+      SnackBarUtils.showConfirmation(context, "Password changed");
+    } catch (e) {
+      SnackBarUtils.showError(context, "of f**k");
+    }
+  }
 }

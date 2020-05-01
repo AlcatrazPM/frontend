@@ -1,11 +1,16 @@
+import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
+import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
+import 'package:alkatrazpm/src/auth/service/AuthService.dart';
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
-  final String _websiteTag;
+  final Account _account;
 
-  AccountDetailsScreen(this._websiteTag);
+  AccountDetailsScreen(this._account);
 
   @override
   _AccountDetailsScreenState createState() => _AccountDetailsScreenState();
@@ -18,8 +23,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
 
   @override
   void initState() {
-    username = TextEditingController(text: "username_jmek");
-    password = TextEditingController(text: "password");
+    username = TextEditingController(text: widget._account.username);
+    password = TextEditingController(text: widget._account.password);
     super.initState();
   }
 
@@ -43,10 +48,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             Text("Account"),
             Spacer(flex: 1),
             IconButton(
-              onPressed: () {
-                edit = !edit;
-                setState(() {});
-              },
+              onPressed: editPressed,
               icon: Icon(edit ? Icons.check : Icons.edit),
             )
           ],
@@ -59,19 +61,43 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("website: "),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Hero(
-                  tag: widget._websiteTag,
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: Text(
-                      "www.example.com",
-                      style: TextStyle(fontSize: 25, color: Colors.grey),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Hero(
+                      tag: "",
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: Text(
+                          widget._account.website,
+                          style: TextStyle(fontSize: 20, color: Colors.grey),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Spacer(),
+                  FutureBuilder(
+                    future: deps
+                        .get<FavIconService>()
+                        .getFavIconUrl(widget._account.website),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.hasError || !snapshot.hasData) {
+                        return Icon(
+                          Icons.account_box,
+                          size: 50,
+                          color: Colors.grey,
+                        );
+                      }
+                      return ConstrainedBox(
+                          constraints:
+                          BoxConstraints(maxWidth: 60, maxHeight: 60),
+                          child: Image.network(snapshot.data));
+                    },
+                  ),
+                ],
               ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: Material(
@@ -105,6 +131,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   child: edit
                       ? TextFormField(
                           controller: password,
+                          style: TextStyle(fontSize: 16),
                           decoration: InputDecoration(
                             labelText: "password:",
                             suffixIcon: IconButton(
@@ -123,7 +150,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                password.text,
+                                "*"*password.text.length,
+
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 18),
                               ),
@@ -138,4 +166,23 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       ),
     );
   }
+
+  void editPressed(){
+    if(edit){
+      widget._account.password = password.text;
+      widget._account.username = username.text;
+      modifyAccount(widget._account);
+    }
+    edit = !edit;
+    setState(() {});
+  }
+  Future<void> modifyAccount(Account account) async{
+    try {
+      await deps.get<AccountsService>().modifyAccount(account);
+    }catch(e){
+
+    }
+  }
+
+
 }

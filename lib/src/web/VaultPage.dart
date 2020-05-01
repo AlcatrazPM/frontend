@@ -1,3 +1,5 @@
+import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,7 +50,7 @@ class _BetterVaultState extends State<BetterVault> {
 
     //you need this empty account in order to know if you are creating a new account
     //or if you are editing an existing one.
-    _account = new Account('', '', '', false);
+    _account = new Account();
     //End of pop up stuff
     super.initState();
   }
@@ -131,7 +133,24 @@ class _BetterVaultState extends State<BetterVault> {
           fontSize: 20,
         ),
       ),
-      leading: Icon(Icons.web),
+      leading: FutureBuilder(
+        future: deps
+            .get<FavIconService>()
+            .getFavIconUrl(listaAfisata[index].website),
+        builder: (ctx, snapshot) {
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Icon(
+              Icons.account_box,
+              size: 30,
+              color: Colors.grey,
+            );
+          }
+          return ConstrainedBox(
+              constraints:
+              BoxConstraints(maxWidth: 30, maxHeight: 30),
+              child: Image.network(snapshot.data));
+        },
+      ),
       subtitle: Text(listaAfisata[index].username),
       trailing: FlatButton(
         child: listaAfisata[index].isFavorite
@@ -581,9 +600,12 @@ class _BetterVaultState extends State<BetterVault> {
 
   List<Account> getListFromBackEnd() {
     List<Account> aux = new List<Account>();
-    aux.add(Account("youtube.com", "Jonuletzul", "1234", false));
-    aux.add(Account("Filelist", "LinoGolden", "panamera", false));
-    aux.add(Account("Xbox", "Vadim", "Regele", false));
+    aux.add(Account(website:"youtube.com", username:"Jonuletzul",
+        password:"1234", isFavorite: true));
+    aux.add(Account(website:"www.facebook.com", username:"Jonuletzul",
+        password:"1234", isFavorite: true));
+    aux.add(Account(website:"www.reddit.com", username:"Jonuletzul",
+        password:"1234", isFavorite: true));
     return aux;
   }
 

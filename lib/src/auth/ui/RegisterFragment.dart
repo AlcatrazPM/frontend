@@ -21,6 +21,8 @@ class _RegisterFragmentState extends State<RegisterFragment> {
   GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
   GlobalKey<FormState> _passwordKey = GlobalKey<FormState>();
   GlobalKey<FormState> _confirmPasswordey = GlobalKey<FormState>();
+  GlobalKey<FormState> _usernameKey = GlobalKey<FormState>();
+
 
   @override
   void initState() {
@@ -47,6 +49,18 @@ class _RegisterFragmentState extends State<RegisterFragment> {
             validator: Validators.emailValidator,
             decoration: InputDecoration(
                 labelText: "Email", prefixIcon: Icon(Icons.email)),
+          ),
+        ),
+        Form(
+          key: _usernameKey,
+          child: TextFormField(
+            controller: username,
+            onChanged: (s) {
+              _usernameKey.currentState.validate();
+            },
+            validator: Validators.usernameValidator,
+            decoration: InputDecoration(
+                labelText: "Name", prefixIcon: Icon(Icons.account_circle)),
           ),
         ),
         Form(
@@ -112,9 +126,10 @@ class _RegisterFragmentState extends State<RegisterFragment> {
 
   bool _validate() {
     var email = _emailKey.currentState.validate();
+    var username = _usernameKey.currentState.validate();
     var password = _passwordKey.currentState.validate();
     var confirm = _confirmPasswordey.currentState.validate();
-    return email && password && confirm;
+    return email && username && password && confirm;
   }
 
 

@@ -5,8 +5,11 @@ import 'dart:math';
 import 'package:alkatrazpm/src/accounts/ui/AccountsListScreen.dart';
 import 'package:alkatrazpm/src/accounts/ui/MainPageWeb.dart';
 import 'package:alkatrazpm/src/auth/model/AuthCredentials.dart';
+import 'package:alkatrazpm/src/auth/model/User.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
 import 'package:alkatrazpm/src/web/Tabs.dart';
@@ -30,6 +33,25 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<User>(builder: (context, snapshot){
+
+      if(snapshot.hasData && snapshot.data == null) {
+        return UiUtils.isMobile(context) ? mobile(context) : web(context);
+      }else{
+       Future.delayed(Duration(seconds: 1), (){
+         if(kIsWeb){
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+           => CustomTabBar()));
+         }else{
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+           => AccountsListScreen()));
+         }
+       });
+        return Container();
+      }
+    },
+      future: deps.get<AuthService>().loggedUser(),
+    );
     return UiUtils.isMobile(context) ? mobile(context) : web(context);
   }
 
@@ -45,46 +67,48 @@ class _AuthScreenState extends State<AuthScreen> {
         isMaterialAppTheme: true,
         data: UiThemes.authTheme(context),
         child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[Colors.blue[400], Colors.blue])),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 32.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.security,
-                              size: 80,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              "Alkatraz PM",
-                              style: TextStyle(fontSize: 30),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: UiUtils.adaptableWidth(context),
-                        child: login
-                            ? LoginFragment(onLogin,
-                                changeFragment: changeFragment)
-                            : RegisterFragment(
-                                onRegister,
-                                changeFragment: changeFragment,
+          body: AppPage(
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[Colors.blue[400], Colors.blue])),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.security,
+                                size: 80,
+                                color: Colors.white,
                               ),
-                      ),
-                    ],
+                              Text(
+                                "Alkatraz PM",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: UiUtils.adaptableWidth(context),
+                          child: login
+                              ? LoginFragment(onLogin,
+                                  changeFragment: changeFragment)
+                              : RegisterFragment(
+                                  onRegister,
+                                  changeFragment: changeFragment,
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -173,25 +197,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        !login
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 32.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    IconButton(
-                                      onPressed: () {
-                                        changeFragment();
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 64.0),
                           child: Container(
@@ -245,7 +250,7 @@ class _AuthScreenState extends State<AuthScreen> {
       return Future.value();
     } catch (e) {
       print(e);
-      showError('Couldn\'t login. Try again!');
+      SnackBarUtils.showError(context, e.toString());
       return Future.value(e);
     }
   }
@@ -254,39 +259,15 @@ class _AuthScreenState extends State<AuthScreen> {
       String email, String username, String password) async {
     var credentials = AuthCredentials.register(email, username, password);
     try {
-      var user = await deps.get<AuthService>().register(credentials);
-      print(user.authResponse.jwt);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-        //return kIsWeb? CustomTabBar() : AccountsListScreen();
-        return kIsWeb ? MainPageWeb() : AccountsListScreen();
-      }));
+      await deps.get<AuthService>().register(credentials);
+      changeFragment();
+      SnackBarUtils.showConfirmation(context, "Registration succesfull");
       return Future.value();
     } catch (e) {
-      showError('We did a oopsie, sorry');
+      SnackBarUtils.showError(context, e.toString());
       return Future.value();
     }
   }
 
-  void showError(String error) {
-    Flushbar(
-      duration: Duration(seconds: 2),
-      margin: EdgeInsets.all(8.0),
-      borderRadius: 8,
-      backgroundGradient: LinearGradient(
-        colors: [Colors.red, Colors.red],
-        stops: [0.6, 1],
-      ),
-      boxShadows: [
-        BoxShadow(
-          color: Colors.black45,
-          offset: Offset(3, 3),
-          blurRadius: 3,
-        ),
-      ],
-      dismissDirection: FlushbarDismissDirection.VERTICAL,
-      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-      title: 'Ooopsie!',
-      message: error,
-    )..show(context);
-  }
+
 }

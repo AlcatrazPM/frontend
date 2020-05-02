@@ -119,10 +119,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.account_circle),
+                    Icon(
+                        Icons.account_circle,
+                        color: isMyAccountPage ? Colors.blue : Colors.black,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("My Account"),
+                      child: Text(
+                          "My Account",
+                          style: TextStyle(
+                            color: isMyAccountPage ? Colors.blue : Colors.black,
+                          ),
+                      ),
                     ),
                   ],
                 ),
@@ -141,10 +149,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 //color: Colors.red,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.pie_chart),
+                    Icon(
+                        Icons.pie_chart,
+                        color: isMyAccountPage ? Colors.black : Colors.blue,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Options"),
+                      child: Text(
+                          "Options",
+                          style: TextStyle(
+                            color: isMyAccountPage ? Colors.black : Colors.blue,
+                          ),
+                      ),
                     ),
                   ],
                 ),

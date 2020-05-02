@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:alkatrazpm/src/accounts/model/Account.dart';
 import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 
+import 'Auxiliars.dart';
+
 class BetterVault extends StatefulWidget {
   @override
   _BetterVaultState createState() => _BetterVaultState();
@@ -259,7 +261,7 @@ class _BetterVaultState extends State<BetterVault> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  padding: const EdgeInsets.only(left: Auxiliars.leftP, top: Auxiliars.topP, bottom: Auxiliars.bottomP,),
                   child: Text(
                     "FILTERS",
                     textAlign: TextAlign.left,
@@ -271,14 +273,18 @@ class _BetterVaultState extends State<BetterVault> {
                 ),
               ],
             ),
-            Divider(
-              height: 3,
-              thickness: 3,
+
+            Container(
+              padding: EdgeInsets.only(left: Auxiliars.leftP, right: Auxiliars.leftP),
+              child: Divider(
+                height: 3,
+                thickness: 3,
+              ),
             ),
 
             //Here is the SEARCH BAR
             Container(
-              padding: EdgeInsets.only(top: 3.0),
+              padding: EdgeInsets.only(top: 10.0, left: Auxiliars.leftP / 2, right: Auxiliars.leftP / 2),
               child: searchBar(),
             ),
 
@@ -288,10 +294,20 @@ class _BetterVaultState extends State<BetterVault> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
-                    Icon(myFilter.onlyFavorites
-                        ? Icons.border_clear
-                        : Icons.border_all),
-                    Text("All items"),
+                    Container(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: Icon(
+                        myFilter.onlyFavorites ? Icons.border_clear : Icons.border_all,
+                        color: myFilter.onlyFavorites ? Colors.black : Colors.blue,
+                      ),
+                    ),
+
+                    Text(
+                        "All items",
+                      style: TextStyle(
+                        color: myFilter.onlyFavorites ? Colors.black : Colors.blue,
+                      ),
+                    ),
                   ],
                 ),
                 // color: Colors.blue,
@@ -310,10 +326,19 @@ class _BetterVaultState extends State<BetterVault> {
                 //color: Colors.red,
                 child: Row(
                   children: <Widget>[
-                    Icon(myFilter.onlyFavorites
-                        ? Icons.star
-                        : Icons.star_border),
-                    Text("Favorites"),
+                    Container(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: Icon(
+                        myFilter.onlyFavorites ? Icons.star : Icons.star_border,
+                        color: myFilter.onlyFavorites ? Colors.blue : Colors.black,
+                      ),
+                    ),
+                    Text(
+                        "Favorites",
+                        style: TextStyle(
+                          color: myFilter.onlyFavorites ? Colors.blue : Colors.black,
+                        ),
+                    ),
                   ],
                 ),
                 onPressed: () {

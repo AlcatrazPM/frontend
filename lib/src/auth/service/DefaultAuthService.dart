@@ -52,8 +52,8 @@ class DefaultAuthService implements AuthService {
   Future<void> register(AuthCredentials credentials) async {
     try {
       var encrypt = deps.get<KeysEncryption>();
-      var iKEK = await encrypt.keyEncryptionKey(credentials.password);
-      var eDEK = await encrypt.dataEncryptionKey();
+      var iKEK = await encrypt.generateKeyEncryptionKey(credentials.password, await encrypt.generateKEKSalt());
+      var eDEK = await encrypt.generateDataEncryptionKey();
       var hashedPassword =
           await encrypt.passwordHash(credentials.password, 100);
       var response = await _dio.post("/register", data: {

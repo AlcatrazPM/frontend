@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/web/Auxiliars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -86,7 +87,7 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  padding: const EdgeInsets.only(left: Auxiliars.leftP, top: Auxiliars.topP, bottom: Auxiliars.bottomP,),
                   child: Text(
                     "SETTINGS",
                     textAlign: TextAlign.left,
@@ -98,9 +99,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            Divider(
-              height: 3,
-              thickness: 3,
+            Container(
+              padding: EdgeInsets.only(left: Auxiliars.leftP, right: Auxiliars.leftP),
+              child: Divider(
+                height: 3,
+                thickness: 3,
+              ),
             ),
 
             //Here is the SEARCH BAR
@@ -115,10 +119,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.account_circle),
+                    Icon(
+                        Icons.account_circle,
+                        color: isMyAccountPage ? Colors.blue : Colors.black,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("My Account"),
+                      child: Text(
+                          "My Account",
+                          style: TextStyle(
+                            color: isMyAccountPage ? Colors.blue : Colors.black,
+                          ),
+                      ),
                     ),
                   ],
                 ),
@@ -137,10 +149,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 //color: Colors.red,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.pie_chart),
+                    Icon(
+                        Icons.pie_chart,
+                        color: isMyAccountPage ? Colors.black : Colors.blue,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Options"),
+                      child: Text(
+                          "Options",
+                          style: TextStyle(
+                            color: isMyAccountPage ? Colors.black : Colors.blue,
+                          ),
+                      ),
                     ),
                   ],
                 ),

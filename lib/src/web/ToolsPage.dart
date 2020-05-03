@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:alkatrazpm/src/web/Tools_PasswordGenerator.dart';
 import 'package:alkatrazpm/src/web/Tools_Export.dart';
 
+import 'Auxiliars.dart';
+
 class ToolsMainPage extends StatefulWidget {
   @override
   _ToolsMainPageState createState() => _ToolsMainPageState();
@@ -37,7 +39,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 8),
+                  padding:const EdgeInsets.only(left: Auxiliars.leftP, top: Auxiliars.topP, bottom: Auxiliars.bottomP,),
                   child: Text(
                     "TOOLS",
                     style: TextStyle(
@@ -48,20 +50,32 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
                 ),
               ],
             ),
-            Divider(
-              height: 3,
-              thickness: 3,
+            Container(
+              padding: EdgeInsets.only(left: Auxiliars.leftP, right: Auxiliars.leftP),
+              child: Divider(
+                height: 3,
+                thickness: 3,
+              ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 8.0, right: 0.5, bottom: 0.0),
               child: FlatButton(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.storage),
+                    Icon(
+                        Icons.storage,
+                        color: isExportVaultPage ? Colors.black : Colors.blue,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Password Manager"),
+                      child: Text(
+                          "Password Manager",
+                          style: TextStyle(
+                            color: isExportVaultPage ? Colors.black : Colors.blue,
+                          ),
+                      ),
                     ),
                   ],
                 ),
@@ -80,10 +94,18 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.import_export),
+                    Icon(
+                        Icons.import_export,
+                        color: isExportVaultPage ? Colors.blue : Colors.black,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Export Vault"),
+                      child: Text(
+                          "Export Vault",
+                          style: TextStyle(
+                            color: isExportVaultPage ? Colors.blue : Colors.black,
+                          ),
+                      ),
                     ),
                   ],
                 ),

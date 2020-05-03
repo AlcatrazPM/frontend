@@ -234,21 +234,19 @@ class _OptionsSettingsState extends State<OptionsSettings> {
   Widget createButton(String title, func()) {
     return Container(
       padding: EdgeInsets.only(
-        left: leftPadding,
+        left: 8.0,
       ),
       child: Row(
         children: <Widget>[
           Expanded(
-            flex: 15,
+            flex: 12,
             child: RaisedButton(
               onPressed: () {
                 func();
               },
               child: Text(
                 title,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               color: Colors.blue,
             ),

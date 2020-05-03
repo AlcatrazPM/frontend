@@ -13,9 +13,12 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   // date importante
   String generatedPassword = "";
   PasswordAttributes passwordAttributes;
+  bool isValid;
 
   @override
   void initState() {
+    isValid = true;
+
     passwordAttributes = PasswordAttributes();
 
     tryRegeneratePassword(passwordAttributes).then((val) => setState(() {
@@ -71,10 +74,21 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
               passwordAttributes.length = _parseField(input_user, 12);
           }
 
-          tryRegeneratePassword(passwordAttributes).then((val) => setState(() {
+
+          tryRegeneratePassword(passwordAttributes).then((val) =>
+              setState(() {
                 generatedPassword = val;
               }));
+
         });
+      },
+      validator: (input) {
+        final isDigitsOnly = int.tryParse(input);
+
+        //sets a variable so i know if the input is valid
+        isDigitsOnly == null ? isValid = false : isValid = true;
+
+        return isDigitsOnly == null ? 'Input needs to be digits only' : null;
       },
     );
   }
@@ -201,7 +215,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
           ),
         ),
 
-        // butoane REGENERARE + COPY
+        // buton REGENERARE
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -233,7 +247,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(left: 40, right: 40),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: FlatButton(
                   child: Text(
                     'COPY',

@@ -165,13 +165,13 @@ class _ExportVaultState extends State<ExportVault> {
         Padding(
           padding: EdgeInsets.only(left: leftPadding, top: 20.0),
           child: RaisedButton(
-            child: Text("Export"),
+            child: Text("Export",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,)),
             onPressed: () {
               submitExport(masterPasswordString, _selectedExport);
             },
-            color: Colors.blueAccent,
+            color: Colors.blue,
             splashColor: Colors.yellow,
-            textColor: Colors.white,
           ),
         ),
       ],

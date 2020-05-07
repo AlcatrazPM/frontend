@@ -67,10 +67,13 @@ class _BetterVaultState extends State<BetterVault> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
+
               width: boxWidth,
               height: boxHeight,
               decoration: BoxDecoration(
                // border: Border.all(),
+               // color: Colors.white,
+
               ),
               child: Row(
                 children: <Widget>[
@@ -508,11 +511,14 @@ class _BetterVaultState extends State<BetterVault> {
                                   : Text('Edit Account', textScaleFactor: 1.5),
                             ),
                             Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: account.isFavorite
-                                  ? Icon(Icons.favorite)
-                                  : Icon(Icons.favorite_border),
+                            Container(
+                              padding: EdgeInsets.all(0.0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: account.isFavorite
+                                    ? Icon(Icons.favorite)
+                                    : Icon(Icons.favorite_border),
+                              ),
                             ),
                           ],
                         ),

@@ -20,6 +20,7 @@ class Carusel extends StatelessWidget {
     createIcon("poza11.png", 0),
     createIcon("confortable.png", 1),
     createIcon("free.png", 2),
+    createIcon("open-door.png", 3),
 //    Image.asset("poza1.jpg"),
 //    Image.asset("poza2.jpg"),
 //    Image.asset("poza3.jpg"),

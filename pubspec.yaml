@@ -79,6 +79,7 @@ flutter:
     - assets/poza15.png
     - assets/confortable.png
     - assets/free.png
+    - assets/open-door.png
 
   # To add assets to your application, add an assets section, like this:
 assets:

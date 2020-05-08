@@ -97,18 +97,50 @@ class _CustomTabBarState extends State<CustomTabBar> {
             ),
           ),
         ),
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            Tab(
-              child: BetterVault(),
+        body: Row(
+          children: <Widget>[
+
+            Expanded(
+                flex: MediaQuery.of(context).size.width < 1700 ? 0 : 1,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.pinkAccent,
+                  child: MediaQuery.of(context).size.width < 1700 ? null : FittedBox(child: Image.asset('images/lock4.jpg'), fit: BoxFit.fitHeight,),)),
+
+            Expanded(
+
+              flex: 3,
+              child: Material(
+                elevation: 10.0,
+
+                child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Tab(
+                      child: BetterVault(),
+                    ),
+                    Tab(
+                      child: ToolsMainPage(),
+                    ),
+                    Tab(
+                      child: SettingsPage(),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Tab(
-              child: ToolsMainPage(),
-            ),
-            Tab(
-              child: SettingsPage(),
-            ),
+
+//            Expanded(
+//                flex:  MediaQuery.of(context).size.width < 1700 ? 0 : 1,
+//                child: Container()),
+
+            Expanded(
+                flex: MediaQuery.of(context).size.width < 1700 ? 0 : 1,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.pinkAccent,
+                  child: MediaQuery.of(context).size.width < 1700 ? null : FittedBox(child: Image.asset('images/lock4.jpg'), fit: BoxFit.fitHeight, alignment: Alignment.center,),
+                )),
           ],
         ),
       ),

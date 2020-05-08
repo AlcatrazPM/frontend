@@ -7,7 +7,7 @@ class Carusel extends StatelessWidget {
   static List<String> titles = [
     "Secure",
     "Confortable",
-    "Free",
+    "! FREE !",
     "Try it now",
   ];
   static List<String> subtitles = [
@@ -19,6 +19,7 @@ class Carusel extends StatelessWidget {
   List<Widget> poze = [
     createIcon("poza11.png", 0),
     createIcon("confortable.png", 1),
+    createIcon("free.png", 2),
 //    Image.asset("poza1.jpg"),
 //    Image.asset("poza2.jpg"),
 //    Image.asset("poza3.jpg"),

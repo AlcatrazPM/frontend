@@ -35,7 +35,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder<User>(builder: (context, snapshot){
 
-      if(snapshot.hasData && snapshot.data == null) {
+      if((snapshot.hasData && snapshot.data == null) || snapshot.hasError ||
+          !snapshot.hasData) {
         return UiUtils.isMobile(context) ? mobile(context) : web(context);
       }else{
        Future.delayed(Duration(seconds: 1), (){

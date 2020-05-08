@@ -479,9 +479,10 @@ class _BetterVaultState extends State<BetterVault> {
                                   width: 25,
                                   child: FlatButton(
                                     padding: EdgeInsets.all(0.0),
-                                    color: Colors.redAccent,
+                                    color: Colors.white,
+                                    hoverColor: Colors.yellow,
                                     splashColor: Colors.red,
-                                    child: Icon(Icons.close, color: Colors.white,),
+                                    child: Icon(Icons.close, color: Colors.redAccent),
                                     onPressed: () {
                                       setState(() {
                                         Navigator.pop(context);

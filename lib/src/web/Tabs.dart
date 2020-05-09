@@ -104,15 +104,31 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 flex: MediaQuery.of(context).size.width < 1700 ? 0 : 1,
                 child: Container(
                   height: MediaQuery.of(context).size.height,
-                  color: Colors.pinkAccent,
+                  //color: Colors.pinkAccent,
                   child: MediaQuery.of(context).size.width < 1700 ? null : FittedBox(child: Image.asset('images/lock4.jpg'), fit: BoxFit.fitHeight,),)),
 
             Expanded(
 
               flex: 3,
-              child: Material(
-                elevation: 10.0,
-
+              child: Container(
+                padding: EdgeInsets.all(0.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 10,
+                      blurRadius: 5,
+                      offset: Offset(0, 0,), // changes position of shadow
+                    ),
+                  ],
+                ),
                 child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
                   children: [

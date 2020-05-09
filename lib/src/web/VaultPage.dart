@@ -67,12 +67,10 @@ class _BetterVaultState extends State<BetterVault> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-
               width: boxWidth,
               height: boxHeight,
               decoration: BoxDecoration(
                // border: Border.all(),
-               // color: Colors.white,
 
               ),
               child: Row(

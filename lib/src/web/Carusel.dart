@@ -1,25 +1,26 @@
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class Carusel extends StatelessWidget {
-
-   static List<String> titles = [
-     "Secure",
-     "Confortable",
-     "Free",
-     "Try it now",
-   ];
-   static List<String> subtitles = [
-     "\"I have never felt more secure. This app changed my life!\"",
-     "\"It has never been easier\"",
-     "It doesn't cost you a dime. There's no catch!",
-     "All you have to do is SIGN UP. It only takes a few seconds!",
-   ];
-   List<Widget> poze = [
+  static List<String> titles = [
+    "Secure",
+    "Confortable",
+    "! FREE !",
+    "Try it now",
+  ];
+  static List<String> subtitles = [
+    "\"I have never felt more secure. This app changed my life!\"",
+    "\"It has never been easier\"",
+    "It doesn't cost you a dime. There's no catch!",
+    "All you have to do is SIGN UP. It only takes a few seconds!",
+  ];
+  List<Widget> poze = [
     createIcon("poza11.png", 0),
+    createIcon("confortable.png", 1),
+    createIcon("free.png", 2),
+    createIcon("open-door.png", 3),
 //    Image.asset("poza1.jpg"),
 //    Image.asset("poza2.jpg"),
 //    Image.asset("poza3.jpg"),
@@ -31,16 +32,14 @@ class Carusel extends StatelessWidget {
 //    Image.asset("poza9.jpg"),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return
-      Center(
-        child: Container(
-          child: anotherCarusel(context),
-          ),
-        );
+    return Center(
+      child: Container(
+        child: anotherCarusel(context),
+      ),
+    );
   }
 
   static Widget createIcon(String pic, int index) {
@@ -48,15 +47,12 @@ class Carusel extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            height: 300,
+              height: 300,
               child: Image.asset(
                 pic,
                 fit: BoxFit.fitHeight,
-              )
-          ),
-
+              )),
           createTitle(index),
-
           createSubtitle(index),
         ],
       ),
@@ -81,7 +77,9 @@ class Carusel extends StatelessWidget {
   //Creates the subtitle.
   static Widget createSubtitle(int index) {
     return Container(
-      padding: EdgeInsets.only(top: 30.0,),
+      padding: EdgeInsets.only(
+        top: 30.0,
+      ),
       child: Text(
         subtitles[index],
         style: TextStyle(
@@ -98,19 +96,18 @@ class Carusel extends StatelessWidget {
         items: poze,
         options: CarouselOptions(
           //height: 400,
-          aspectRatio: 16/9,
+          aspectRatio: 16 / 9,
           viewportFraction: 1,
           initialPage: 0,
           enableInfiniteScroll: true,
           reverse: false,
-          autoPlay: false,
-          autoPlayInterval: Duration(seconds: 3),
-          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          autoPlay: true,
+          autoPlayInterval: Duration(seconds: 6),
+          autoPlayAnimationDuration: Duration(milliseconds: 2000),
           autoPlayCurve: Curves.fastOutSlowIn,
           enlargeCenterPage: true,
           scrollDirection: Axis.horizontal,
-        )
-    );
+        ));
   }
 
   //This function is not used at the moment at all.
@@ -139,5 +136,4 @@ class Carusel extends StatelessWidget {
       ],
     );
   }
-  
 }

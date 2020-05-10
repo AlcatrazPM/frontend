@@ -89,11 +89,15 @@ class KeysEncryptionDefault implements KeysEncryption {
     var valueBytes = base64.decode(value);
     var keyBytes = base64.decode(key);
 
+    print(keyBytes);
+
     KeyParameter keyParam = new KeyParameter(keyBytes);
     BlockCipher aes = new AESFastEngine();
 
     var iv = new Uint8List(aes.blockSize)
       ..setRange(0, aes.blockSize, valueBytes);
+
+    print(iv);
 
     BlockCipher cipher = new CBCBlockCipher(aes);
     cipher.init(false, new ParametersWithIV(keyParam, iv));
@@ -102,10 +106,17 @@ class KeysEncryptionDefault implements KeysEncryption {
     Uint8List dataBytes = new Uint8List(dataLength)
       ..setRange(0, dataLength, valueBytes, aes.blockSize);
 
-    var paddedClearData = _processBlocks(cipher, dataBytes);
-    var clearData = _unpad(paddedClearData);
+    print(dataBytes);
 
-    return Future.value(new String.fromCharCodes(clearData));
+    var paddedClearData = _processBlocks(cipher, dataBytes);
+    var clearData = paddedClearData;
+//    if (paddedClearData.length % aes.blockSize != 0) {
+      clearData = _unpad(paddedClearData);
+//    }
+
+    print(clearData);
+
+    return Future.value(base64.encode(clearData));
   }
 
   @override
@@ -120,7 +131,7 @@ class KeysEncryptionDefault implements KeysEncryption {
     var KEK = Uint8List(32);
 
     var decodedSalt = Uint8List.fromList(base64.decode(salt));
-    var decodedBase = Uint8List.fromList(base64.decode(password));
+    var decodedBase = Uint8List.fromList(password.codeUnits);
 
     KeyDerivator kd = new KeyDerivator("SHA-1/HMAC/PBKDF2");
     var pbkdfParams = new Pbkdf2Parameters(decodedSalt, 100000, 32);
@@ -142,13 +153,21 @@ class KeysEncryptionDefault implements KeysEncryption {
   }
 
   @override
-  Future<Account> decryptEntry(Account entry, String DEK) {
+  Future<Account> decryptEntry(Account entry, String DEK) async {
+    String site;
+    String user;
+    String pass;
 
+    site = String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
+    user = String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
+    pass = String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
+
+    return Future.value(new Account(website: site, username: user, password: pass, isFavorite: entry.isFavorite));
   }
 
   @override
-  Future<List<Account>> decryptAll(List<Account> entries, String DEK) {
-
+  Iterable<Future<Account>> decryptAll(List<Account> entries, String DEK) {
+    return entries.map((e) => decryptEntry(e, DEK));
   }
 }
 

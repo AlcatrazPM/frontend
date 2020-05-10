@@ -16,6 +16,7 @@ class Account {
   String iconUrl;
 
   Account({
+    this.id = "",
     this.website = "",
     this.username = "",
     this.password = "",

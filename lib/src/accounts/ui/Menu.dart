@@ -1,4 +1,7 @@
+import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
+import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/auth/ui/AuthScreen.dart';
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +30,9 @@ class Menu extends StatelessWidget {
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FlatButton(onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(
+              child: FlatButton(onPressed: () async {
+                await deps.get<AuthService>().logout();
+                Navigator.push(context, MaterialPageRoute(
                     builder: (ctx) => AuthScreen()
                 ));
               }, child: Row(

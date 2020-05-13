@@ -21,5 +21,15 @@ class Validators{
       return "username must not be empty";
     return null;
   }
+  static String websiteValidator(String value){
+    if(value == "")
+      return "website must not be empty";
+    var formatError = "not a valid website format";
+    if(!value.contains("."))
+      return formatError;
+    if(!value.contains("www."))
+      return "website must start with www";
+    return null;
+  }
 
 }

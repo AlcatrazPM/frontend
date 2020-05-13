@@ -43,6 +43,8 @@ dependencies:
 
   pointycastle: ^1.0.2
 
+  enhanced_future_builder: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:

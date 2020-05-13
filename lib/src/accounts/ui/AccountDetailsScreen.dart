@@ -3,6 +3,8 @@ import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -77,24 +79,10 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     ),
                   ),
                   Spacer(),
-                  FutureBuilder(
-                    future: deps
-                        .get<FavIconService>()
-                        .getFavIconUrl(widget._account.website),
-                    builder: (ctx, snapshot) {
-                      if (snapshot.hasError || !snapshot.hasData) {
-                        return Icon(
-                          Icons.account_box,
-                          size: 50,
-                          color: Colors.grey,
-                        );
-                      }
-                      return ConstrainedBox(
-                          constraints:
-                          BoxConstraints(maxWidth: 60, maxHeight: 60),
-                          child: Image.network(snapshot.data));
-                    },
-                  ),
+                  ConstrainedBox(
+                      constraints:
+                      BoxConstraints(maxWidth: 60, maxHeight: 60),
+                      child: Image.memory(widget._account.iconBytes, scale: 0.6,))
                 ],
               ),
 
@@ -135,10 +123,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                           decoration: InputDecoration(
                             labelText: "password:",
                             suffixIcon: IconButton(
-                              onPressed: (){
-                                password.text = "dfgdfgdfgdfg";
-                                setState(() {});
-                              },
+                              onPressed: genPassword,
                               icon: Icon(Icons.refresh),
                             ),
                           ),
@@ -167,6 +152,10 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     );
   }
 
+  Future<void> genPassword()async{
+    password.text = await deps.get<PasswordGen>().generatePassword();
+  }
+
   void editPressed(){
     if(edit){
       widget._account.password = password.text;
@@ -179,8 +168,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   Future<void> modifyAccount(Account account) async{
     try {
       await deps.get<AccountsService>().modifyAccount(account);
+      SnackBarUtils.showConfirmation(context, "account modified");
     }catch(e){
-
+      SnackBarUtils.showError(context, e);
     }
   }
 

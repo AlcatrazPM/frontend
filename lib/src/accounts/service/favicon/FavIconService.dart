@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 abstract class FavIconService{
-  Future<String> getFavIconUrl(String website);
+  Future<Uint8List> getFavIcon(String website);
 }

@@ -51,7 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
         return Container();
       }
     },
-      future: deps.get<AuthService>().loggedUser(),
+      future: deps.get<AuthService>().loggedUser(doPop: false),
     );
     return UiUtils.isMobile(context) ? mobile(context) : web(context);
   }
@@ -69,6 +69,7 @@ class _AuthScreenState extends State<AuthScreen> {
         data: UiThemes.authTheme(context),
         child: Scaffold(
           body: AppPage(
+            isPopable: false,
             child: Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -231,22 +232,12 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<String> changeMail(String sdf, String df) async {}
 
   Future<void> onLogin(String email, String password) async {
-//    print(email);
-//
-//    var bytes = utf8.encode(password);
-//    var hash = sha512.convert(bytes);
-//
-//    for (int i = 0; i < 99; i++) {
-//      hash = sha512.convert(hash.bytes);
-//    }
-
     var credentials = AuthCredentials.login(email, password);
     try {
       var user = await deps.get<AuthService>().login(credentials);
       print(user.email);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
         return kIsWeb? CustomTabBar() : AccountsListScreen();
-//        return kIsWeb ? MainPageWeb() : AccountsListScreen();
       }));
       return Future.value();
     } catch (e) {
@@ -260,7 +251,10 @@ class _AuthScreenState extends State<AuthScreen> {
       String email, String username, String password) async {
     var credentials = AuthCredentials.register(email, username, password);
     try {
-      await deps.get<AuthService>().register(credentials);
+      await Future.delayed(Duration(seconds: 0), ()async{
+        await deps.get<AuthService>().register(credentials);
+      });
+
       changeFragment();
       SnackBarUtils.showConfirmation(context, "Registration succesfull");
       return Future.value();

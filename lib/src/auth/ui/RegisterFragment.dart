@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/ui_utils/Loading.dart';
 import 'package:alkatrazpm/src/ui_utils/UiCommon.dart';
 import 'package:alkatrazpm/src/utils/Validators.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _RegisterFragmentState extends State<RegisterFragment> {
   GlobalKey<FormState> _passwordKey = GlobalKey<FormState>();
   GlobalKey<FormState> _confirmPasswordey = GlobalKey<FormState>();
   GlobalKey<FormState> _usernameKey = GlobalKey<FormState>();
-
+  LoadingController loadingController = LoadingController();
 
   @override
   void initState() {
@@ -97,12 +98,24 @@ class _RegisterFragmentState extends State<RegisterFragment> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: UiCommon.outlineButton(
-            context,
-            onPressed: () {
-              doRegister(email.text, username.text, password.text);
-            },
-            text: "Register",
+          child: Loading(
+            loading: Column(
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text("Generating encryption keys..."),
+                )
+              ],
+            ),
+            controller:  loadingController,
+            child: UiCommon.outlineButton(
+              context,
+              onPressed: () {
+                doRegister(email.text, username.text, password.text);
+              },
+              text: "Register",
+            ),
           ),
         ),
         Padding(
@@ -120,8 +133,10 @@ class _RegisterFragmentState extends State<RegisterFragment> {
 
   void doRegister(String email, String username, String password) async {
     if (_validate()) {
-      widget.onRegisterClicked(email, username, password);
-    }
+      loadingController.setLoading();
+      await widget.onRegisterClicked(email, username, password);
+      loadingController.setDone();
+   }
   }
 
   bool _validate() {

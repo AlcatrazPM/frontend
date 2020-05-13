@@ -12,7 +12,7 @@ abstract class AuthService{
   Future<User> login(AuthCredentials credentials);
   Future<void> register(AuthCredentials credentials);
   Future<void> logout();
-  Future<User> loggedUser();
+  Future<User> loggedUser({bool doPop = true});
 
   Future<void> modifyMasterPassword(String oldPassword, String
   newPassword);

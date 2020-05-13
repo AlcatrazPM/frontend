@@ -1,9 +1,11 @@
+import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
 import 'package:alkatrazpm/src/auth/model/AuthCredentials.dart';
 import 'package:alkatrazpm/src/auth/model/User.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //TODO save session in shared prefs
@@ -14,6 +16,7 @@ class DefaultAuthService implements AuthService {
   static const String _I_KEK = "i_kek";
   static const String _E_DEK = "e_dek";
   static const String _SESSION_TIMER = "session_timer";
+  static const String _SESSION_START_DATE = "session_start_date";
   static const String _JWT = "JWT";
 
   Dio _dio;
@@ -33,6 +36,11 @@ class DefaultAuthService implements AuthService {
       });
       if (response.statusCode == 201 || response.statusCode == 200) {
         AuthResponse authResponse = AuthResponse.fromJson(response.data);
+        authResponse.sessionTimer = Duration(minutes: authResponse.sessionTimer)
+            .inMilliseconds;
+        authResponse.sessionStartDate = DateTime
+            .now()
+            .millisecondsSinceEpoch;
         _user = User(credentials.email, authResponse);
         await saveUser(_user);
         return Future.value(_user);
@@ -48,14 +56,19 @@ class DefaultAuthService implements AuthService {
     }
   }
 
+
   @override
   Future<void> register(AuthCredentials credentials) async {
     try {
+
       var encrypt = deps.get<KeysEncryption>();
-      var iKEK = await encrypt.generateKeyEncryptionKey(credentials.password, await encrypt.generateKEKSalt());
+      var iKEK = await
+        encrypt.generateKeyEncryptionKey(
+            credentials.password, await encrypt.generateKEKSalt());
+
       var eDEK = await encrypt.generateDataEncryptionKey();
       var hashedPassword =
-          await encrypt.passwordHash(credentials.password, 100);
+      await encrypt.passwordHash(credentials.password, 100);
       var response = await _dio.post("/register", data: {
         "username": credentials.email,
         "name": credentials.username,
@@ -79,8 +92,14 @@ class DefaultAuthService implements AuthService {
   }
 
   @override
-  Future<User> loggedUser() async {
-    if (_user != null) return Future.value(_user);
+  Future<User> loggedUser({bool doPop = true}) async {
+    if (_user != null) {
+      if (_isValidSession()) {
+        return Future.value(_user);
+      }
+      deps.get<LogoutInterceptor>().callInterceptor();
+      return Future.value(null);
+    }
     var sharedPrefs = await SharedPreferences.getInstance();
     var isLoggedIn = sharedPrefs.getBool(_LOGGED_IN);
     if (isLoggedIn) {
@@ -89,9 +108,14 @@ class DefaultAuthService implements AuthService {
       authResponse.eDek = sharedPrefs.getString(_E_DEK);
       authResponse.iKek = sharedPrefs.getString(_I_KEK);
       authResponse.jwt = sharedPrefs.getString(_JWT);
+      authResponse.sessionStartDate = sharedPrefs.getInt(_SESSION_START_DATE);
       _user = User(sharedPrefs.getString(_EMAIL), authResponse);
-      return Future.value(_user);
+      if (_isValidSession()) {
+        return Future.value(_user);
+      }
+      return Future.value(null);
     }
+    deps.get<LogoutInterceptor>().callInterceptor();
     return Future.value(null);
   }
 
@@ -103,6 +127,10 @@ class DefaultAuthService implements AuthService {
     sharedPrefs.setString(_E_DEK, user.authResponse.eDek);
     sharedPrefs.setString(_I_KEK, user.authResponse.iKek);
     sharedPrefs.setInt(_SESSION_TIMER, user.authResponse.sessionTimer);
+    sharedPrefs.setInt(
+        _SESSION_START_DATE, DateTime
+        .now()
+        .millisecondsSinceEpoch);
     return Future.value();
   }
 
@@ -114,8 +142,8 @@ class DefaultAuthService implements AuthService {
   }
 
   @override
-  Future<void> modifyMasterPassword(
-      String oldPassword, String newPassword) async {
+  Future<void> modifyMasterPassword(String oldPassword,
+      String newPassword) async {
     try {
       var encrypt = deps.get<KeysEncryption>();
       var oldPasswordHashed = await encrypt.passwordHash(oldPassword, 100);
@@ -163,7 +191,7 @@ class DefaultAuthService implements AuthService {
   }
 
   @override
-  Future<void> modifySessionTimer(int newTimer) async{
+  Future<void> modifySessionTimer(int newTimer) async {
     try {
       var response = await _dio.post("/modifyacctdata",
           data: {
@@ -185,7 +213,7 @@ class DefaultAuthService implements AuthService {
   }
 
   @override
-  Future<void> modifyUsername(String newUsername) async{
+  Future<void> modifyUsername(String newUsername) async {
     try {
       var response = await _dio.post("/modifyacctdata",
           data: {
@@ -204,5 +232,17 @@ class DefaultAuthService implements AuthService {
       }
       return Future.error(e.toString());
     }
+  }
+
+  bool _isValidSession() {
+    int timePassed = DateTime
+        .now()
+        .millisecondsSinceEpoch -
+        _user.authResponse.sessionStartDate;
+    if (timePassed < _user.authResponse.sessionTimer) {
+      return true;
+    }
+    deps.get<LogoutInterceptor>().callInterceptor();
+    return false;
   }
 }

@@ -1,5 +1,9 @@
+import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
+import 'package:alkatrazpm/src/ui_utils/Loading.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +12,8 @@ import 'package:alkatrazpm/src/accounts/model/Account.dart';
 import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 
 import 'Auxiliars.dart';
+
+import 'dart:io';
 
 class BetterVault extends StatefulWidget {
   @override
@@ -24,6 +30,7 @@ class _BetterVaultState extends State<BetterVault> {
 
   //In listAccount tinem toate elementele.
   List<Account> listAccount;
+
   //In listaAfisata tinem elementele filtrate.
   List<Account> listaAfisata;
 
@@ -36,12 +43,17 @@ class _BetterVaultState extends State<BetterVault> {
 
   //the only purpose of this empty account is to be added in function call when pressing "Add Item"
   Account _account;
+
   //End of pop up stuff-------------------
+
+  Future<List<Account>> currentAccounts;
+
+  LoadingController loadingController = LoadingController();
 
   @override
   void initState() {
     myFilter = new AccountsFilter(onlyFavorites: false, toSearch: '');
-    listAccount = getListFromBackEnd();
+    listAccount = List();
     listaAfisata = filter(listAccount, myFilter);
 
     //Pop up stuff
@@ -53,6 +65,8 @@ class _BetterVaultState extends State<BetterVault> {
     //you need this empty account in order to know if you are creating a new account
     //or if you are editing an existing one.
     _account = new Account();
+
+    currentAccounts = deps.get<AccountsService>().getAccounts();
     //End of pop up stuff
     super.initState();
   }
@@ -70,8 +84,8 @@ class _BetterVaultState extends State<BetterVault> {
               width: boxWidth,
               height: boxHeight,
               decoration: BoxDecoration(
-               // border: Border.all(),
-              ),
+                  // border: Border.all(),
+                  ),
               child: Row(
                 children: <Widget>[
                   //First Column of the page.
@@ -106,7 +120,19 @@ class _BetterVaultState extends State<BetterVault> {
                           Container(
                             height: boxHeight - 100,
                             padding: EdgeInsets.only(top: 4.0),
-                            child: getListView(),
+                            child: FutureBuilder<List<Account>>(
+                                future: currentAccounts,
+                                builder: (ctx, snapshot) {
+                                  print(snapshot.data);
+                                  if (snapshot.hasData) {
+                                    listAccount =
+                                        filter(snapshot.data, myFilter);
+                                    listaAfisata = listAccount;
+                                    return getListView();
+                                  }
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }),
                           ),
                         ],
                       ),
@@ -122,6 +148,7 @@ class _BetterVaultState extends State<BetterVault> {
   }
 
   Widget getListTile(int index) {
+    var _account = listaAfisata[index];
     return ListTile(
       onTap: () {
         Account aux = listaAfisata[index];
@@ -135,34 +162,19 @@ class _BetterVaultState extends State<BetterVault> {
           fontSize: 20,
         ),
       ),
-      leading: FutureBuilder(
-        future: deps
-            .get<FavIconService>()
-            .getFavIconUrl(listaAfisata[index].website),
-        builder: (ctx, snapshot) {
-          if (snapshot.hasError || !snapshot.hasData) {
-            return Icon(
-              Icons.account_box,
-              size: 30,
-              color: Colors.grey,
-            );
-          }
-          return ConstrainedBox(
-              constraints:
-              BoxConstraints(maxWidth: 30, maxHeight: 30),
-              child: Image.network(snapshot.data));
-        },
-      ),
+      leading: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 30, maxHeight: 30),
+          child: Image.memory(
+            _account.iconBytes,
+            scale: 0.5,
+          )),
       subtitle: Text(listaAfisata[index].username),
       trailing: FlatButton(
         child: listaAfisata[index].isFavorite
             ? Icon(Icons.favorite)
             : Icon(Icons.favorite_border),
         onPressed: () {
-          setState(() {
-            listaAfisata[index].isFavorite = !listaAfisata[index].isFavorite;
-            listaAfisata = filter(listAccount, myFilter);
-          });
+          changeFavorite(listaAfisata[index]);
         },
       ),
     );
@@ -261,7 +273,11 @@ class _BetterVaultState extends State<BetterVault> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: Auxiliars.leftP, top: Auxiliars.topP, bottom: Auxiliars.bottomP,),
+                  padding: const EdgeInsets.only(
+                    left: Auxiliars.leftP,
+                    top: Auxiliars.topP,
+                    bottom: Auxiliars.bottomP,
+                  ),
                   child: Text(
                     "FILTERS",
                     textAlign: TextAlign.left,
@@ -275,7 +291,8 @@ class _BetterVaultState extends State<BetterVault> {
             ),
 
             Container(
-              padding: EdgeInsets.only(left: Auxiliars.leftP, right: Auxiliars.leftP),
+              padding: EdgeInsets.only(
+                  left: Auxiliars.leftP, right: Auxiliars.leftP),
               child: Divider(
                 height: 3,
                 thickness: 3,
@@ -284,7 +301,10 @@ class _BetterVaultState extends State<BetterVault> {
 
             //Here is the SEARCH BAR
             Container(
-              padding: EdgeInsets.only(top: 10.0, left: Auxiliars.leftP / 2, right: Auxiliars.leftP / 2),
+              padding: EdgeInsets.only(
+                  top: 10.0,
+                  left: Auxiliars.leftP / 2,
+                  right: Auxiliars.leftP / 2),
               child: searchBar(),
             ),
 
@@ -297,25 +317,27 @@ class _BetterVaultState extends State<BetterVault> {
                     Container(
                       padding: EdgeInsets.only(right: 5.0),
                       child: Icon(
-                        myFilter.onlyFavorites ? Icons.border_clear : Icons.border_all,
-                        color: myFilter.onlyFavorites ? Colors.black : Colors.blue,
+                        myFilter.onlyFavorites
+                            ? Icons.border_clear
+                            : Icons.border_all,
+                        color:
+                            myFilter.onlyFavorites ? Colors.black : Colors.blue,
                       ),
                     ),
-
                     Text(
-                        "All items",
+                      "All items",
                       style: TextStyle(
-                        color: myFilter.onlyFavorites ? Colors.black : Colors.blue,
+                        color:
+                            myFilter.onlyFavorites ? Colors.black : Colors.blue,
                       ),
                     ),
                   ],
                 ),
                 // color: Colors.blue,
                 onPressed: () {
-                  setState(() {
-                    myFilter.onlyFavorites = false;
-                    listaAfisata = filter(listAccount, myFilter);
-                  });
+                  myFilter.onlyFavorites = false;
+                  listaAfisata = filter(listAccount, myFilter);
+                  setState(() {});
                 },
               ),
             ),
@@ -330,22 +352,23 @@ class _BetterVaultState extends State<BetterVault> {
                       padding: EdgeInsets.only(right: 5.0),
                       child: Icon(
                         myFilter.onlyFavorites ? Icons.star : Icons.star_border,
-                        color: myFilter.onlyFavorites ? Colors.blue : Colors.black,
+                        color:
+                            myFilter.onlyFavorites ? Colors.blue : Colors.black,
                       ),
                     ),
                     Text(
-                        "Favorites",
-                        style: TextStyle(
-                          color: myFilter.onlyFavorites ? Colors.blue : Colors.black,
-                        ),
+                      "Favorites",
+                      style: TextStyle(
+                        color:
+                            myFilter.onlyFavorites ? Colors.blue : Colors.black,
+                      ),
                     ),
                   ],
                 ),
                 onPressed: () {
-                  setState(() {
-                    myFilter.onlyFavorites = true;
-                    listaAfisata = filter(listAccount, myFilter);
-                  });
+                  myFilter.onlyFavorites = true;
+                  listAccount = filter(listAccount, myFilter);
+                  setState(() {});
                 },
               ),
             ),
@@ -424,7 +447,8 @@ class _BetterVaultState extends State<BetterVault> {
           bottom: 10.0,
           left: 10.0,
         ),
-      ),//
+      ),
+      //
       inputFormatters: [
         new LengthLimitingTextInputFormatter(30),
       ],
@@ -437,6 +461,7 @@ class _BetterVaultState extends State<BetterVault> {
   //Creates the POP UP-----------------------------------------------
   //-----------------
   createAccountDetailsDialog(BuildContext context, Account account) {
+    loadingController = LoadingController();
     //this way you know if you are adding account or editing.
     //if isCreating is true, then you are adding new account.
     bool isCreating = account.username == '' ? true : false;
@@ -459,16 +484,15 @@ class _BetterVaultState extends State<BetterVault> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-
                         // butonul de CANCEL
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0, top:8.0, bottom: 8.0, right: 16.0),
+                          padding: const EdgeInsets.only(
+                              left: 16.0, top: 8.0, bottom: 8.0, right: 16.0),
                           child: SizedBox(
                             height: 25,
                             child: Row(
                               children: <Widget>[
-
-                               Spacer(),
+                                Spacer(),
 
                                 // buton de cancel
                                 Container(
@@ -478,7 +502,10 @@ class _BetterVaultState extends State<BetterVault> {
                                     padding: EdgeInsets.all(0.0),
                                     color: Colors.redAccent,
                                     splashColor: Colors.red,
-                                    child: Icon(Icons.close, color: Colors.white,),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
                                     onPressed: () {
                                       setState(() {
                                         Navigator.pop(context);
@@ -486,20 +513,16 @@ class _BetterVaultState extends State<BetterVault> {
                                     },
                                   ),
                                 ),
-
                               ],
                             ),
                           ),
                         ),
 
-
                         // title
                         Row(
                           children: <Widget>[
-
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16.0),
+                              padding: const EdgeInsets.only(left: 16.0),
                               child: isCreating == true
                                   ? Text(
                                       'Add Account',
@@ -533,7 +556,8 @@ class _BetterVaultState extends State<BetterVault> {
                           child: Text('Website'),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
+                          padding: const EdgeInsets.only(
+                              left: 16.0, right: 8.0, top: 8.0, bottom: 8.0),
                           child: SizedBox(
                               width: 300,
                               height: 35,
@@ -547,7 +571,8 @@ class _BetterVaultState extends State<BetterVault> {
                           child: Text('Username'),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
+                          padding: const EdgeInsets.only(
+                              left: 16.0, right: 8.0, top: 8.0, bottom: 8.0),
                           child: SizedBox(
                               width: 300,
                               height: 35,
@@ -556,46 +581,56 @@ class _BetterVaultState extends State<BetterVault> {
                         ),
 
                         // password
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                          child: Text('Password'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0, right:8.0, top: 8.0, bottom: 8.0),
-                          child: SizedBox(
-                              width: 300,
-                              height: 35,
-                              child: DataField(
-                                  'Password', account, _passwordController)),
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, right: 8.0, top: 8.0, bottom: 8.0),
+                              child: SizedBox(
+                                  width: 300,
+                                  height: 35,
+                                  child: DataField(
+                                      'Password', account, _passwordController)),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.refresh),
+                              onPressed: () {
+                                print("gen");
+                                genPassword();
+                              },
+                            )
+                          ],
                         ),
 
                         Spacer(),
 
                         Row(
                           children: <Widget>[
-                            
                             // buton de save
                             Padding(
-                              padding: const EdgeInsets.only(left: 16.0, bottom:8.0),
-                              child: RaisedButton(
-                                color: theme_color,
-                                splashColor: Colors.yellow,
-                                child: Text(
-                                  'SAVE',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, bottom: 8.0),
+                              child: Loading(
+                                controller: loadingController,
+                                child: RaisedButton(
+                                  color: theme_color,
+                                  splashColor: Colors.yellow,
+                                  child: Text(
+                                    'SAVE',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (isCreating == false) {
+                                        onChangesSaved(account);
+                                      } else {
+                                        onAccountCreation();
+                                      }
+                                    });
+                                  },
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    if (isCreating == false) {
-                                      onChangesSaved(account);
-                                    } else {
-                                      onAccountCreation();
-                                    }
-                                    Navigator.pop(context);
-                                  });
-                                },
                               ),
                             ),
 
@@ -620,14 +655,11 @@ class _BetterVaultState extends State<BetterVault> {
                                 onPressed: () {
                                   // trimit accountul mai departe care trebuie sters
                                   setState(() {
-                                    Navigator.pop(context);
                                     onDelete(account);
                                   });
                                 },
                               ),
                             ),
-
-
                           ],
                         ),
 
@@ -644,38 +676,71 @@ class _BetterVaultState extends State<BetterVault> {
         });
   }
 
-  //Ready for Madalin---------------------------------------------------
-  List<Account> filter(List<Account> myList, AccountsFilter myFilter) {
-    return myList;
+  void genPassword() async {
+    _passwordController.text = await deps.get<PasswordGen>().generatePassword();
+    print(_passwordController.text);
+    setState(() {});
   }
 
-  List<Account> getListFromBackEnd() {
-    List<Account> aux = new List<Account>();
-    aux.add(Account(website:"youtube.com", username:"Jonuletzul",
-        password:"1234", isFavorite: true));
-    aux.add(Account(website:"www.facebook.com", username:"Jonuletzul",
-        password:"1234", isFavorite: true));
-    aux.add(Account(website:"www.reddit.com", username:"Jonuletzul",
-        password:"1234", isFavorite: true));
-    return aux;
+  //Ready for Madalin---------------------------------------------------
+  List<Account> filter(List<Account> myList, AccountsFilter myFilter) {
+    return deps.get<AccountsService>().filter(myList, myFilter);
+  }
+
+  void changeFavorite(Account account) async {
+    safeNetworkAction(() async {
+      account.isFavorite = !account.isFavorite;
+      await deps.get<AccountsService>().modifyAccount(account);
+      setState(() {});
+    }, pop: false);
   }
 
   //Called when Delete is pressed.
-  void onDelete(Account account) {}
+  void onDelete(Account account) async {
+    safeNetworkAction(() async {
+      await deps.get<AccountsService>().deleteAccount(account);
+      listAccount.removeWhere((element) => element.id == account.id);
+      loadingController.setDone();
+      SnackBarUtils.showConfirmation(context, "Account deleted");
+    });
+  }
 
-  void onChangesSaved(Account account) {
-    // in _websiteController, _passwordController, _usernameController
-    // you have the new values.
-    //They have to be added to "account"
+  void onChangesSaved(Account account) async {
     account.website = _websiteController.text;
     account.username = _usernameController.text;
     account.password = _passwordController.text;
+
+    safeNetworkAction(() async {
+      await deps.get<AccountsService>().modifyAccount(account);
+      SnackBarUtils.showConfirmation(context, "Account changed");
+    });
   }
 
-  void onAccountCreation() {
-    // in _websiteController, _passwordController, _usernameController
-    // you have the values for the new account
-    // you have to initialize a new Account object and add it to list.
-    print("Creating account.\n");
+  Future<void> onAccountCreation() async {
+    safeNetworkAction(() async {
+      Account account = Account(
+          website: _websiteController.text,
+          password: _passwordController.text,
+          username: _usernameController.text);
+      account = await deps.get<AccountsService>().addAccount(account);
+      account.iconBytes =
+          await deps.get<FavIconService>().getFavIcon(account.website);
+      listAccount.add(account);
+      setState(() {});
+      SnackBarUtils.showConfirmation(context, "Account added");
+    });
+  }
+
+  void safeNetworkAction(Future<void> action(), {bool pop = true}) async {
+    try {
+      loadingController.setLoading();
+      await action.call();
+      loadingController.setDone();
+      if (pop) Navigator.pop(context);
+    } catch (e) {
+      print(e);
+      loadingController.setDone();
+      SnackBarUtils.showError(context, "something went wrong");
+    }
   }
 }

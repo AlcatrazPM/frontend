@@ -24,6 +24,10 @@ class AuthResponse{
   String eDek;
   @JsonKey(name: "i_kek")
   String iKek;
+
+  @JsonKey(ignore: true)
+  int sessionStartDate;
+
   AuthResponse({this.jwt, this.iKek, this.eDek, this.sessionTimer});
   factory AuthResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthResponseFromJson(json);

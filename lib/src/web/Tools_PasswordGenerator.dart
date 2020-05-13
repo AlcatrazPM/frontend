@@ -1,3 +1,6 @@
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,6 +18,12 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   PasswordAttributes passwordAttributes;
   bool isValid;
 
+  Future<PasswordAttributes> futurePass;
+  TextEditingController _minNumbers = TextEditingController();
+  TextEditingController _minSpecial = TextEditingController();
+  TextEditingController _length = TextEditingController();
+
+
   @override
   void initState() {
     isValid = true;
@@ -25,6 +34,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
           generatedPassword = val;
         }));
 
+    futurePass = deps.get<PasswordGen>().getAttributes();
     super.initState();
   }
 
@@ -50,10 +60,23 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
     return value;
   }
 
+  TextEditingController getAttrByTitle(String title){
+    switch (title) {
+      case 'Minimum numbers':
+        return _minNumbers;
+        break;
+      case 'Minimum special':
+        return _minSpecial;
+        break;
+      case 'Length':
+        return _length;
+    }
+  }
   // data field = curtom text form field
   Widget DataField(String title) {
     return TextFormField(
       //autofocus: true,
+      controller: getAttrByTitle(title),
       cursorColor: Colors.amber,
       style: TextStyle(height: 1.0),
       decoration: InputDecoration(
@@ -177,136 +200,149 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+    return FutureBuilder<PasswordAttributes>(
+      future: futurePass,
+      builder: (context, snapshot){
+        if(snapshot.hasData) {
+          passwordAttributes = snapshot.data;
+          _length.text = snapshot.data.length.toString();
+          _minNumbers.text = snapshot.data.minNumbers.toString();
+          _minSpecial.text = snapshot.data.minSpecial.toString();
+        }
+          return  Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
 
-        // title
-        Padding(
-          padding: const EdgeInsets.only(
-              left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
-          child: getTitle('Password Generator'),
-        ),
+              // title
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
+                child: getTitle('Password Generator'),
+              ),
 
 
-        // linie de despartire
-        Divider(
-          height: 3.0,
-          thickness: 2.0,
-        ),
+              // linie de despartire
+              Divider(
+                height: 3.0,
+                thickness: 2.0,
+              ),
 
-        // afisare parola generata
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: ButtonTheme(
-                height: 40.0,
-                child: FlatButton(
-                  child: Text(
-                    generatedPassword,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  color: my_grey,
-                  onPressed: () {},
-                )),
-          ),
-        ),
-
-        // buton REGENERARE
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // REGENERATE
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: RaisedButton(
-                  color: theme_color,
-                  splashColor: Colors.yellow,
-                  child: Text(
-                    'REGENERATE',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: white),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      tryRegeneratePassword(passwordAttributes)
-                          .then((val) => setState(() {
-                                generatedPassword = val;
-                              }));
-                    });
-                  },
+              // afisare parola generata
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ButtonTheme(
+                      height: 40.0,
+                      child: FlatButton(
+                        child: Text(
+                          generatedPassword,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        color: my_grey,
+                        onPressed: () {},
+                      )),
                 ),
               ),
-            ),
 
-            // COPY
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: FlatButton(
-                  child: Text(
-                    'COPY',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: theme_color),
+              // buton REGENERARE
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  // REGENERATE
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8),
+                      child: RaisedButton(
+                        color: theme_color,
+                        splashColor: Colors.yellow,
+                        child: Text(
+                          'REGENERATE',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: white),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            tryRegeneratePassword(passwordAttributes)
+                                .then((val) => setState(() {
+                              generatedPassword = val;
+                            }));
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: generatedPassword));
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
 
-        // MINIMUM SPECIAL SI MINIMUM NUMBERS
-        Row(
-          children: <Widget>[
-            // MINIMUM numbers
-            Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DataField('Minimum numbers'),
-                )),
+                  // COPY
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: FlatButton(
+                        child: Text(
+                          'COPY',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: theme_color),
+                        ),
+                        onPressed: () {
 
-            // MINIMUM specials
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DataField('Minimum special'),
+                          Clipboard.setData(ClipboardData(text: generatedPassword));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
 
-        Row(
-          children: <Widget>[
-            // length field
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DataField('Length'),
-              ),
-            ),
+              // MINIMUM SPECIAL SI MINIMUM NUMBERS
+              Row(
+                children: <Widget>[
+                  // MINIMUM numbers
+                  Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DataField('Minimum numbers'),
+                      )),
 
-            // special options field
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, top: 8, right: 4),
-                child: Options(),
+                  // MINIMUM specials
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataField('Minimum special',),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ],
+
+              Row(
+                children: <Widget>[
+                  // length field
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataField('Length'),
+                    ),
+                  ),
+
+                  // special options field
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, top: 8, right: 4),
+                      child: Options(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+
+      },
     );
   }
 
@@ -316,14 +352,19 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
     } else {
       setState(() {});
     }
-
     return err;
   }
 
   Future<String> onRegeneratePassword(PasswordAttributes passAttr) async {
     // treaba de backend
-    String genrated_pass = PasswordGenerator.generatePassword(passAttr);
 
+    String genrated_pass = deps.get<PasswordGen>().genPassword(passAttr);
     return genrated_pass;
+  }
+
+  @override
+  void dispose() {
+    deps.get<PasswordGen>().saveAttributes(passwordAttributes);
+    super.dispose();
   }
 }

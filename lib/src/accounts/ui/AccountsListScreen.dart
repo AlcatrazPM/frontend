@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alkatrazpm/src/accounts/model/Account.dart';
 import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
@@ -10,6 +12,7 @@ import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
 import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -47,37 +50,43 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
         onPressed: showAddAccountDialog,
         child: Icon(Icons.add),
       ),
-      body: Center(
-        child: Container(
-          width: UiUtils.adaptableWidth(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: FutureBuilder<List<Account>>(
-                  future: currentAccounts,
-                  builder: (context, snapshot) {
-                    List<Account> accounts = List<Account>();
-                    if (snapshot.hasData) {
-                      accounts = snapshot.data;
-                    }
-                    return RefreshIndicator(
-                      onRefresh: () async{
-                        currentAccounts = getAccounts();
-                        await currentAccounts;
-                        return Future.value();
+      body: AppPage(
+        child: Center(
+          child: Container(
+            width: UiUtils.adaptableWidth(context),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      return refresh();
+                    },
+                    child: FutureBuilder<List<Account>>(
+                      future: currentAccounts,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var accounts = snapshot.data;
+
+                          return ListView.builder(
+                            addAutomaticKeepAlives: true,
+                            itemBuilder: (ctx, i) {
+                              return accountCard(ctx, accounts[i], i);
+                            },
+                            itemCount: accounts.length,
+                          );
+                        }
+                        return Center(
+                          child: Hero(
+                              tag: "progress",
+                              child: CircularProgressIndicator()),
+                        );
                       },
-                      child: ListView.builder(
-                        itemBuilder: (ctx, i) {
-                          return accountCard(ctx, accounts[i], i);
-                        },
-                        itemCount: accounts.length,
-                      ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -86,9 +95,8 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
 
   Widget accountCard(BuildContext context, Account account, int index) {
     return Dismissible(
-      onDismissed: (dir) async{
-        (await currentAccounts).removeAt(index);
-        setState(() {});
+      onDismissed: (dir) async {
+        removeAccount(account, index);
       },
       key: UniqueKey(),
       background: Padding(
@@ -158,24 +166,13 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
                       ],
                     ),
                     Spacer(),
-                    FutureBuilder(
-                      future: deps
-                          .get<FavIconService>()
-                          .getFavIconUrl(account.website),
-                      builder: (ctx, snapshot) {
-                        if (snapshot.hasError || !snapshot.hasData) {
-                          return Icon(
-                            Icons.account_box,
-                            size: 50,
-                            color: Colors.grey,
-                          );
-                        }
-                        return ConstrainedBox(
-                            constraints:
-                                BoxConstraints(maxWidth: 60, maxHeight: 60),
-                            child: Image.network(snapshot.data));
-                      },
-                    ),
+                    ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 60, maxHeight: 60),
+                        child: Image.memory(
+                          account.iconBytes,
+                          scale: 0.7,
+                        ))
                   ],
                 ),
                 Row(
@@ -206,33 +203,48 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
     return deps.get<AccountsService>().getAccounts();
   }
 
-  void showAddAccountDialog() async{
+  Future<void> refresh() async{
+    currentAccounts = getAccounts();
+    await currentAccounts;
+    setState(() {});
+    return Future.value();
+  }
+
+  void showAddAccountDialog() async {
     var res = await showDialog(context: context, child: AddAccountDialog());
-    if(res != null && res is Account){
-      try{
+    if (res != null && res is Account) {
+      try {
         await deps.get<AccountsService>().addAccount(res);
         (await currentAccounts).add(res);
+        setState(() {});
         SnackBarUtils.showConfirmation(context, "Account added");
-      }catch(e){
+      } catch (e) {
         SnackBarUtils.showError(context, e.toString());
       }
     }
   }
 
-  void showDetails(BuildContext context, Account account) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (ctx) => AccountDetailsScreen(account)));
+  void showDetails(BuildContext context, Account account) async{
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (ctx) => AccountDetailsScreen(account)));
+    setState(() {});
   }
 
-  Future<void> changeFavoriteAccount(Account account) async{
-    try {
-      account.isFavorite = !account.isFavorite;
-      await deps.get<AccountsService>().changeFavorite(account);
+  Future<void> removeAccount(Account account, int index) async {
+    try{
+      await deps.get<AccountsService>().deleteAccount(account);
+      (await currentAccounts).removeWhere((a )=> a.id == account.id);
+      SnackBarUtils.showConfirmation(context, "Account removed");
     }catch(e){
-
+      SnackBarUtils.showError(context, e.toString());
+      setState(() {});
     }
   }
 
+  Future<void> changeFavoriteAccount(Account account) async {
+    try {
+      account.isFavorite = !account.isFavorite;
+      await deps.get<AccountsService>().changeFavorite(account);
+    } catch (e) {}
+  }
 }

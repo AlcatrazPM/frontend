@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/ui_utils/Loading.dart';
 import 'package:alkatrazpm/src/ui_utils/UiCommon.dart';
 import 'package:alkatrazpm/src/utils/Validators.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ class LoginFragment extends StatefulWidget {
 class _LoginFragmentState extends State<LoginFragment> {
   TextEditingController password, username;
   String error = "";
+  LoadingController loadingController = LoadingController();
 
   GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
   GlobalKey<FormState> _passwordKey = GlobalKey<FormState>();
@@ -60,12 +62,19 @@ class _LoginFragmentState extends State<LoginFragment> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: UiCommon.outlineButton(
-            context,
-            onPressed: () {
-              doLogin(context, username.text, password.text);
-            },
-            text: "Login",
+          child: Loading(
+            loading: Hero(
+              tag: "progress",
+              child: CircularProgressIndicator(),
+            ),
+            controller: loadingController,
+            child: UiCommon.outlineButton(
+              context,
+              onPressed: () {
+                doLogin(context, username.text, password.text);
+              },
+              text: "Login",
+            ),
           ),
         ),
         Padding(
@@ -87,7 +96,9 @@ class _LoginFragmentState extends State<LoginFragment> {
 
   void doLogin(BuildContext context, String email, String password) async {
     if (validate()) {
-      widget.onLoginClicked(email, password);
+      loadingController.setLoading();
+      await widget.onLoginClicked(email, password);
+      loadingController.setDone();
     }
   }
 

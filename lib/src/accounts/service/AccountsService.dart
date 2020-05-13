@@ -1,4 +1,5 @@
 import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 import 'package:alkatrazpm/src/auth/model/User.dart';
 
 abstract class AccountsService{
@@ -7,4 +8,5 @@ abstract class AccountsService{
   Future<bool> changeFavorite(Account account);
   Future<bool> deleteAccount(Account account);
   Future<Account> addAccount(Account account);
+  List<Account> filter(List<Account> list, AccountsFilter filter);
 }

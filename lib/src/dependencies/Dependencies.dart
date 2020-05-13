@@ -8,6 +8,8 @@ import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/auth/service/DefaultAuthService.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryptionDefault.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGenDefault.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
@@ -28,5 +30,6 @@ initAllDependencies() {
   deps.registerSingleton<AccountsService>(DefaultAccountsService(dataDio));
   deps.registerSingleton<KeysEncryption>(KeysEncryptionDefault());
   deps.registerSingleton<FavIconService>(DefaultFavIconService());
+  deps.registerSingleton<PasswordGen>(PasswordGenDefault());
 
 }

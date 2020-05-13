@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:alkatrazpm/src/web/SettingsPage.dart';
@@ -35,63 +36,65 @@ class _CustomTabBarState extends State<CustomTabBar> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           bottom: PreferredSize(
-            child: Center(
-              child: Container(
-                width: 1000.0,
-                child: Row(
-                  children: <Widget>[
-                    // column with logo icon
-                    Container(
-                      padding: EdgeInsets.only(right: 20.0, left: 20.0),
-                      child: Column(
-                        children: <Widget>[
-                          Icon(
-                            Icons.pets,
-                            color: Colors.white,
-                          )
-                        ],
+            child: AppPage(
+              child: Center(
+                child: Container(
+                  width: 1000.0,
+                  child: Row(
+                    children: <Widget>[
+                      // column with logo icon
+                      Container(
+                        padding: EdgeInsets.only(right: 20.0, left: 20.0),
+                        child: Column(
+                          children: <Widget>[
+                            Icon(
+                              Icons.pets,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
 
-                    // column with tabs
-                    Container(
-                      width: 300,
-                      child: TabBar(
-                        tabs: [
-                          Tab(
-                            child: Text(
-                              'Vault',
-                              textScaleFactor: 1.2,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                      // column with tabs
+                      Container(
+                        width: 300,
+                        child: TabBar(
+                          tabs: [
+                            Tab(
+                              child: Text(
+                                'Vault',
+                                textScaleFactor: 1.2,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                          Tab(
-                            child: Text(
-                              'Tools',
-                              textScaleFactor: 1.2,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Tab(
+                              child: Text(
+                                'Tools',
+                                textScaleFactor: 1.2,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                          Tab(
-                            child: Text(
-                              'Settings',
-                              textScaleFactor: 1.2,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Tab(
+                              child: Text(
+                                'Settings',
+                                textScaleFactor: 1.2,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Spacer(),
+                      Spacer(),
 
-                    // column with log out button
-                    Container(
-                      padding: EdgeInsets.only(right: 20.0,),
-                      child: Column(
-                        children: <Widget>[ExitAccountButton(context)],
+                      // column with log out button
+                      Container(
+                        padding: EdgeInsets.only(right: 20.0,),
+                        child: Column(
+                          children: <Widget>[ExitAccountButton(context)],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

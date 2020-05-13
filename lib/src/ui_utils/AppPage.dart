@@ -4,9 +4,11 @@ import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AppPage extends StatefulWidget{
+class AppPage extends StatefulWidget {
   final Widget child;
-  AppPage({@required this.child});
+  final bool isPopable;
+
+  AppPage({@required this.child, this.isPopable = true});
 
   @override
   _AppPageState createState() => _AppPageState();
@@ -15,7 +17,10 @@ class AppPage extends StatefulWidget{
 class _AppPageState extends State<AppPage> {
   @override
   Widget build(BuildContext context) {
-    deps.get<LogoutInterceptor>().setInterceptor(context);
+    if (widget.isPopable)
+      deps.get<LogoutInterceptor>().setInterceptor(context);
+    else
+      deps.get<LogoutInterceptor>().setInterceptor(null);
     return widget.child;
   }
 

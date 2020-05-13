@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'Account.g.dart';
@@ -13,14 +16,14 @@ class Account {
   bool isFavorite;
 
   @JsonKey(ignore: true)
-  String iconUrl;
+  Uint8List iconBytes = Uint8List(1);
 
   Account({
     this.website = "",
     this.username = "",
     this.password = "",
     this.isFavorite = false,
-    this.iconUrl,
+    this.iconBytes,
   });
 
   factory Account.fromJson(Map<String, dynamic> json) =>

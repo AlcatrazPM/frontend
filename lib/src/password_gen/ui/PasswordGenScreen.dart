@@ -1,5 +1,7 @@
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/model/PasswordAttributes.dart';
+import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
 import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
 import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/services.dart';
 class PasswordGenScreen extends StatefulWidget {
   @override
   _PasswordGenScreenState createState() => _PasswordGenScreenState();
+
+
 }
 
 class _PasswordGenScreenState extends State<PasswordGenScreen> {
@@ -19,6 +23,7 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
   bool AZ = true;
   bool digits = true;
   bool special = false;
+  PasswordAttributes attributes = PasswordAttributes();
 
   @override
   void initState() {
@@ -222,23 +227,29 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
   }
 
   void onGeneratePassword() {
-    var attributes = PasswordAttributes(
+    attributes = PasswordAttributes(
       hasLowerCase: az,
       hasUpperCase: AZ,
       hasNumbers: digits,
       hasSpecialChars: special,
       length: length.toInt(),
     );
-    genPassword(attributes);
+    genPassword();
   }
 
-  void genPassword(PasswordAttributes attributes) {
+  void genPassword() {
     try {
-      var password = PasswordGenerator.generatePassword(attributes);
+      var password = deps.get<PasswordGen>().genPassword(attributes);
       generatedPassword.text = password;
       setState(() {});
     } catch (e) {
       SnackBarUtils.showError(context, e.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    deps.get<PasswordGen>().saveAttributes(attributes);
+    super.dispose();
   }
 }

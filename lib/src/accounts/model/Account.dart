@@ -19,6 +19,7 @@ class Account {
   Uint8List iconBytes = Uint8List(1);
 
   Account({
+    this.id = "",
     this.website = "",
     this.username = "",
     this.password = "",

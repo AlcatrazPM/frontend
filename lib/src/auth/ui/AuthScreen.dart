@@ -12,6 +12,7 @@ import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
 import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:alkatrazpm/src/ui_utils/UiTheme.dart';
+import 'package:alkatrazpm/src/web/Carusel.dart';
 import 'package:alkatrazpm/src/web/Tabs.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -149,43 +150,52 @@ class _AuthScreenState extends State<AuthScreen> {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 32.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.security,
-                                    size: 130,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Alkatraz PM",
-                                    style: TextStyle(
-                                        fontSize: 30, color: Colors.white),
-                                  ),
-                                ],
+                              child: Container(
+                                padding: EdgeInsets.only(left: 30.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.security,
+                                      size: 150,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      "Alkatraz PM",
+                                      style: TextStyle(
+                                          fontSize: 40, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 8.0, horizontal: 32),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "One PM to rule them all Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in lorem nisl. Fusce vehicula tempor facilisis. Vivamus vitae libero dignissim, placerat lacus sit amet, efficitur ligula. Vestibulum mi magna, bibendum at blandit nec, pellentesque non nisi. Pellentesque tincidunt et urna condimentum volutpat.  ",
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.white),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(64.0),
-                                    child: Text(
-                                      "One PM to rule them all !",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    ),
-                                  ),
-                                ],
+                              child: Container(
+                                //color: Colors.black,
+                                height: 500.0,
+                                child: Carusel(),
+
+//                                child: Column(
+//                                  crossAxisAlignment: CrossAxisAlignment.start,
+//                                  mainAxisAlignment: MainAxisAlignment.start,
+//                                  children: <Widget>[
+//                                    Text(
+//                                      "One PM to rule them all Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in lorem nisl. Fusce vehicula tempor facilisis. Vivamus vitae libero dignissim, placerat lacus sit amet, efficitur ligula. Vestibulum mi magna, bibendum at blandit nec, pellentesque non nisi. Pellentesque tincidunt et urna condimentum volutpat.  ",
+//                                      style: TextStyle(
+//                                          fontSize: 18, color: Colors.white),
+//                                    ),
+//                                    Padding(
+//                                      padding: const EdgeInsets.all(64.0),
+//                                      child: Text(
+//                                        "One PM to rule them all !",
+//                                        style: TextStyle(
+//                                            fontSize: 18, color: Colors.white),
+//                                      ),
+//                                    ),
+//                                  ],
+//                                ),
                               ),
                             ),
                           ],

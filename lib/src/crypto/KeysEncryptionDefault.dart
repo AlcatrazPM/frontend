@@ -161,6 +161,7 @@ String _generateKeyEncryptionKey(List<String> params) {
   var decodedSalt = Uint8List.fromList(base64.decode(salt));
   var decodedBase = Uint8List.fromList(base64.decode(password));
 
+
   KeyDerivator kd = new KeyDerivator("SHA-1/HMAC/PBKDF2");
   var pbkdfParams = new Pbkdf2Parameters(decodedSalt, 100000, 32);
 
@@ -177,6 +178,24 @@ String _passwordHash(List<dynamic> params) {
   var hash = sha512.convert(bytes);
   for (int i = 0; i < iterations - 1; i++) {
     hash = sha512.convert(hash.bytes);
+  }
+
+  @override
+  Future<Account> decryptEntry(Account entry, String DEK) async {
+    String site;
+    String user;
+    String pass;
+
+    site = String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
+    user = String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
+    pass = String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
+
+    return Future.value(new Account(website: site, username: user, password: pass, isFavorite: entry.isFavorite));
+  }
+
+  @override
+  Iterable<Future<Account>> decryptAll(List<Account> entries, String DEK) {
+    return entries.map((e) => decryptEntry(e, DEK));
   }
   return hash.toString();
 }

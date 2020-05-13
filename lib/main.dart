@@ -3,6 +3,7 @@ import 'package:alkatrazpm/src/accounts/ui/EcranJmek.dart';
 import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
+import 'package:alkatrazpm/src/web/Carusel.dart';
 import 'package:flutter/material.dart';
 
 import 'src/auth/ui/AuthScreen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       home: AuthScreen(),
       //home: CustomTabBar(),
+      //home: Carusel(),
     );
   }
 }

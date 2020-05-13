@@ -76,7 +76,7 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   Widget DataField(String title) {
     return TextFormField(
       //autofocus: true,
-      controller: getAttrByTitle(title),
+//      controller: getAttrByTitle(title),
       cursorColor: Colors.amber,
       style: TextStyle(height: 1.0),
       decoration: InputDecoration(
@@ -204,10 +204,10 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
       future: futurePass,
       builder: (context, snapshot){
         if(snapshot.hasData) {
-          passwordAttributes = snapshot.data;
-          _length.text = snapshot.data.length.toString();
-          _minNumbers.text = snapshot.data.minNumbers.toString();
-          _minSpecial.text = snapshot.data.minSpecial.toString();
+//          passwordAttributes = snapshot.data;
+//          _length.text = snapshot.data.length.toString();
+//          _minNumbers.text = snapshot.data.minNumbers.toString();
+//          _minSpecial.text = snapshot.data.minSpecial.toString();
         }
           return  Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -356,8 +356,6 @@ class _PasswordGeneratorState extends State<PasswordGeneratorWidget> {
   }
 
   Future<String> onRegeneratePassword(PasswordAttributes passAttr) async {
-    // treaba de backend
-
     String genrated_pass = deps.get<PasswordGen>().genPassword(passAttr);
     return genrated_pass;
   }

@@ -441,7 +441,7 @@ class _BetterVaultState extends State<BetterVault> {
         fontSize: 15.0,
       ),
       decoration: InputDecoration(
-        //labelText: title,
+        labelText: title,
         border: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
         contentPadding: EdgeInsets.only(
           bottom: 10.0,
@@ -703,7 +703,7 @@ class _BetterVaultState extends State<BetterVault> {
   void onDelete(Account account) async {
     safeNetworkAction(() async {
       await deps.get<AccountsService>().deleteAccount(account);
-      listAccount.removeWhere((element) => element.id == account.id);
+      (await currentAccounts).removeWhere((element) => element.id == account.id);
       loadingController.setDone();
       SnackBarUtils.showConfirmation(context, "Account deleted");
     });
@@ -729,7 +729,7 @@ class _BetterVaultState extends State<BetterVault> {
       account = await deps.get<AccountsService>().addAccount(account);
       account.iconBytes =
           await deps.get<FavIconService>().getFavIcon(account.website);
-      listAccount.add(account);
+      (await currentAccounts).add(account);
       setState(() {});
       SnackBarUtils.showConfirmation(context, "Account added");
     });
@@ -740,6 +740,7 @@ class _BetterVaultState extends State<BetterVault> {
       loadingController.setLoading();
       await action.call();
       loadingController.setDone();
+      setState(() {});
       if (pop) Navigator.pop(context);
     } catch (e) {
       print(e);

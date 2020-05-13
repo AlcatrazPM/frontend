@@ -22,6 +22,10 @@ class PasswordGenDefault implements PasswordGen {
   Future<PasswordAttributes> getAttributes() async{
     var attribs = PasswordAttributes();
     var sharedPref = await SharedPreferences.getInstance();
+    var a = sharedPref.getBool("pg_shared");
+    if(a == null){
+      return Future.value(attribs);
+    }
     attribs.length = sharedPref.getInt(_LENGTH);
     attribs.hasLowerCase = sharedPref.getBool(_LOWER);
     attribs.hasUpperCase = sharedPref.getBool(_UPPER);
@@ -35,6 +39,7 @@ class PasswordGenDefault implements PasswordGen {
   @override
   Future<void> saveAttributes(PasswordAttributes attributes) async{
     var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setBool("pg_shared", true);
     sharedPref.setInt(_LENGTH, attributes.length);
     sharedPref.setBool(_LOWER, attributes.hasLowerCase);
     sharedPref.setBool(_UPPER, attributes.hasUpperCase);

@@ -507,7 +507,6 @@ class _BetterVaultState extends State<BetterVault> {
                                       Icons.close,
                                       color: Colors.white,
                                     ),
-                                    child: Icon(Icons.close, color: Colors.redAccent),
                                     onPressed: () {
                                       setState(() {
                                         Navigator.pop(context);

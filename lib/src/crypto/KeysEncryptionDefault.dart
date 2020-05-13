@@ -10,6 +10,36 @@ import 'package:pointycastle/export.dart';
 
 class KeysEncryptionDefault implements KeysEncryption {
   @override
+  Future<Account> decryptEntry(Account entry, String DEK) async {
+    String site;
+    String user;
+    String pass;
+    site =
+        String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
+    user =
+        String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
+    pass =
+        String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
+
+    return Future.value(new Account(
+        website: site,
+        username: user,
+        password: pass,
+        isFavorite: entry.isFavorite));
+  }
+
+  @override
+  Future<List<Account>> decryptAll(List<Account> entries, String DEK) async {
+    var res = List<Account>(1);
+    int i = 0;
+    for (Account a in entries) {
+      res[i] = await decryptEntry(a, DEK);
+      i++;
+    }
+    return Future.value(res);
+  }
+
+  @override
   Future<String> generateDataEncryptionKey() async {
     return compute(_generateDataEncryptionKey, 1);
   }
@@ -40,19 +70,12 @@ class KeysEncryptionDefault implements KeysEncryption {
     return compute(_passwordHash, [password, iterations]);
   }
 
-  @override
-  Future<Account> decryptEntry(Account entry, String DEK) async {}
-
-  @override
-  Future<List<Account>> decryptAll(List<Account> entries, String DEK) async {}
-
   List<int> _getRandomBytes(int numBytes) {
     Random rand = new Random.secure();
     return List<int>.generate(numBytes, (i) => rand.nextInt(256));
   }
-
-
 }
+
 Uint8List _pad(Uint8List src, int blockSize) {
   var pad = new PKCS7Padding();
   pad.init(null);
@@ -84,8 +107,6 @@ Uint8List _processBlocks(BlockCipher cipher, Uint8List inp) {
 
   return out;
 }
-
-
 
 List<int> _getRandomBytes(int numBytes) {
   Random rand = new Random.secure();
@@ -137,8 +158,7 @@ String _decrypt(List<String> params) {
   KeyParameter keyParam = new KeyParameter(keyBytes);
   BlockCipher aes = new AESFastEngine();
 
-  var iv = new Uint8List(aes.blockSize)
-    ..setRange(0, aes.blockSize, valueBytes);
+  var iv = new Uint8List(aes.blockSize)..setRange(0, aes.blockSize, valueBytes);
 
   BlockCipher cipher = new CBCBlockCipher(aes);
   cipher.init(false, new ParametersWithIV(keyParam, iv));
@@ -161,7 +181,6 @@ String _generateKeyEncryptionKey(List<String> params) {
   var decodedSalt = Uint8List.fromList(base64.decode(salt));
   var decodedBase = Uint8List.fromList(base64.decode(password));
 
-
   KeyDerivator kd = new KeyDerivator("SHA-1/HMAC/PBKDF2");
   var pbkdfParams = new Pbkdf2Parameters(decodedSalt, 100000, 32);
 
@@ -178,24 +197,6 @@ String _passwordHash(List<dynamic> params) {
   var hash = sha512.convert(bytes);
   for (int i = 0; i < iterations - 1; i++) {
     hash = sha512.convert(hash.bytes);
-  }
-
-  @override
-  Future<Account> decryptEntry(Account entry, String DEK) async {
-    String site;
-    String user;
-    String pass;
-
-    site = String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
-    user = String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
-    pass = String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
-
-    return Future.value(new Account(website: site, username: user, password: pass, isFavorite: entry.isFavorite));
-  }
-
-  @override
-  Iterable<Future<Account>> decryptAll(List<Account> entries, String DEK) {
-    return entries.map((e) => decryptEntry(e, DEK));
   }
   return hash.toString();
 }

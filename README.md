@@ -1,4 +1,5 @@
-
+# important !!!
+# make sure to have flutter upgraded to last version (some behaviours are changed in the last version)
 
 # before running the project, run this command in terminal
 

@@ -25,6 +25,10 @@ class UiUtils {
     return r > 0.8;
   }
 
+  static double authTitlefontSize(BuildContext context){
+    return 12.0 + 20.0*(MediaQuery.of(context).size.height/800);
+  }
+
   static double screenRatio(BuildContext context) {
     Size s = MediaQuery.of(context).size;
     return s.height / s.width;

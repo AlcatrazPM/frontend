@@ -128,6 +128,8 @@ class _BetterVaultState extends State<BetterVault> {
                                     listAccount =
                                         filter(snapshot.data, myFilter);
                                     listaAfisata = listAccount;
+                                    currentAccounts = Future.value(List<Account>.from
+                                      (snapshot.data));
                                     return getListView();
                                   }
                                   return Center(

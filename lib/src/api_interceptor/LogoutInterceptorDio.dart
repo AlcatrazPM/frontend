@@ -1,5 +1,6 @@
 import 'package:alkatrazpm/src/api_interceptor/LogoutInterceptor.dart';
 import 'package:alkatrazpm/src/auth/ui/AuthScreen.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class LogoutInterceptorDio extends InterceptorsWrapper
         Navigator.pushReplacement(_context, MaterialPageRoute(
             builder: (ctx) => AuthScreen()
         ));
+        SnackBarUtils.showError(_context, "session expired");
       }
     });
 

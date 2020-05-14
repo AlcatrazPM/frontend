@@ -32,7 +32,7 @@ class Menu extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: FlatButton(onPressed: () async {
                 await deps.get<AuthService>().logout();
-                Navigator.push(context, MaterialPageRoute(
+                Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (ctx) => AuthScreen()
                 ));
               }, child: Row(

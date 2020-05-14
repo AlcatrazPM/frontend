@@ -140,66 +140,45 @@ class _AuthScreenState extends State<AuthScreen> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: <Color>[Colors.blue[400], Colors.blue])),
-                    height: MediaQuery.of(context).size.height,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: 150),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 32.0),
-                              child: Container(
-                                padding: EdgeInsets.only(left: 30.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.security,
-                                      size: 150,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      "Alkatraz PM",
-                                      style: TextStyle(
-                                          fontSize: 40, color: Colors.white),
-                                    ),
-                                  ],
-                                ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32.0),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 30.0),
+                              child:
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.security,
+                                    size: UiUtils.authTitlefontSize
+                                      (context)*4,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Alkatraz PM",
+                                    style: TextStyle(
+                                        fontSize: UiUtils.authTitlefontSize(context), color: Colors
+                                        .white),
+                                  ),
+                                ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 32),
-                              child: Container(
-                                //color: Colors.black,
-                                height: 500.0,
-                                child: Carusel(),
-
-//                                child: Column(
-//                                  crossAxisAlignment: CrossAxisAlignment.start,
-//                                  mainAxisAlignment: MainAxisAlignment.start,
-//                                  children: <Widget>[
-//                                    Text(
-//                                      "One PM to rule them all Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in lorem nisl. Fusce vehicula tempor facilisis. Vivamus vitae libero dignissim, placerat lacus sit amet, efficitur ligula. Vestibulum mi magna, bibendum at blandit nec, pellentesque non nisi. Pellentesque tincidunt et urna condimentum volutpat.  ",
-//                                      style: TextStyle(
-//                                          fontSize: 18, color: Colors.white),
-//                                    ),
-//                                    Padding(
-//                                      padding: const EdgeInsets.all(64.0),
-//                                      child: Text(
-//                                        "One PM to rule them all !",
-//                                        style: TextStyle(
-//                                            fontSize: 18, color: Colors.white),
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 32),
+                            child: Container(
+                              //color: Colors.black,
+                              height: MediaQuery.of(context).size.height*0.8,
+                              child: Carusel(),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

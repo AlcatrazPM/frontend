@@ -8,5 +8,6 @@ abstract class KeysEncryption {
   Future<String> generateKeyEncryptionKey(String password, String salt);
   Future<String> passwordHash(String password, int iterations);
   Future<Account> decryptEntry(Account entry, String DEK);
+  Future<Account> encryptEntry(Account entry, String DEK);
   Future<List<Account>> decryptAll(List<Account> entries, String DEK);
 }

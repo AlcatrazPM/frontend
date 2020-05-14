@@ -30,6 +30,7 @@ class DefaultAuthService implements AuthService {
       var hashedPassword = await deps
           .get<KeysEncryption>()
           .passwordHash(credentials.password, 100);
+      print("hashed:\n"+hashedPassword);
       var response = await _dio.post("/login", data: {
         "username": credentials.email,
         "password": hashedPassword,

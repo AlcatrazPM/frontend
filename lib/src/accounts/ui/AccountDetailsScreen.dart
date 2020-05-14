@@ -4,6 +4,7 @@ import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
 import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
+import 'package:alkatrazpm/src/ui_utils/Loading.dart';
 import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -22,11 +23,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   TextEditingController username;
   TextEditingController password;
   bool edit = false;
+  LoadingController loadingController;
 
   @override
   void initState() {
     username = TextEditingController(text: widget._account.username);
     password = TextEditingController(text: widget._account.password);
+    loadingController = LoadingController();
     super.initState();
   }
 
@@ -49,9 +52,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             Spacer(flex: 1),
             Text("Account"),
             Spacer(flex: 1),
-            IconButton(
-              onPressed: editPressed,
-              icon: Icon(edit ? Icons.check : Icons.edit),
+            Loading(
+              controller: loadingController,
+              loading: CircularProgressIndicator(backgroundColor: Colors
+                  .white,),
+              child: IconButton(
+                onPressed: editPressed,
+                icon: Icon(edit ? Icons.check : Icons.edit),
+              ),
             )
           ],
         ),
@@ -153,14 +161,17 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   }
 
   Future<void> genPassword()async{
+
     password.text = await deps.get<PasswordGen>().generatePassword();
   }
 
-  void editPressed(){
+  void editPressed() async{
     if(edit){
       widget._account.password = password.text;
       widget._account.username = username.text;
-      modifyAccount(widget._account);
+      loadingController.setLoading();
+      await modifyAccount(widget._account);
+      loadingController.setDone();
     }
     edit = !edit;
     setState(() {});

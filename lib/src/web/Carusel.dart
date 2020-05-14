@@ -1,3 +1,4 @@
+import 'package:alkatrazpm/src/ui_utils/UIUtils.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,25 +17,11 @@ class Carusel extends StatelessWidget {
     "It doesn't cost you a dime. There's no catch!",
     "All you have to do is SIGN UP. It only takes a few seconds!",
   ];
-  List<Widget> poze = [
-    createIcon("poza11.png", 0),
-    createIcon("confortable.png", 1),
-    createIcon("free.png", 2),
-    createIcon("open-door.png", 3),
-//    Image.asset("poza1.jpg"),
-//    Image.asset("poza2.jpg"),
-//    Image.asset("poza3.jpg"),
-//    Image.asset("poza4.jpg"),
-//    Image.asset("poza5.jpg"),
-//    Image.asset("poza6.jpg"),
-//    Image.asset("poza7.jpg"),
-//    Image.asset("poza8.jpg"),
-//    Image.asset("poza9.jpg"),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
     return Center(
       child: Container(
         child: anotherCarusel(context),
@@ -42,31 +29,29 @@ class Carusel extends StatelessWidget {
     );
   }
 
-  static Widget createIcon(String pic, int index) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Container(
-              height: 300,
-              child: Image.asset(
-                pic,
-                fit: BoxFit.fitHeight,
-              )),
-          createTitle(index),
-          createSubtitle(index),
-        ],
-      ),
+  Widget createIcon(BuildContext context, String pic, int index) {
+    return Column(
+      children: <Widget>[
+        Container(
+            height: MediaQuery.of(context).size.height*0.2,
+            child: Image.asset(
+              pic,
+              fit: BoxFit.fitHeight,
+            )),
+        createTitle(context, index),
+        createSubtitle(context, index),
+      ],
     );
   }
 
   //Creates the title.
-  static Widget createTitle(int index) {
+  Widget createTitle(BuildContext context, int index) {
     return Container(
       padding: EdgeInsets.only(top: 70.0),
       child: Text(
         titles[index],
         style: TextStyle(
-          fontSize: 40.0,
+          fontSize: UiUtils.authTitlefontSize(context)*0.8,
           color: Colors.white,
           letterSpacing: 4.0,
         ),
@@ -75,7 +60,7 @@ class Carusel extends StatelessWidget {
   }
 
   //Creates the subtitle.
-  static Widget createSubtitle(int index) {
+  static Widget createSubtitle(BuildContext context, int index) {
     return Container(
       padding: EdgeInsets.only(
         top: 30.0,
@@ -84,7 +69,7 @@ class Carusel extends StatelessWidget {
         subtitles[index],
         style: TextStyle(
           color: Colors.white,
-          fontSize: 20,
+          fontSize: UiUtils.authTitlefontSize(context)*0.6,
           letterSpacing: 2.0,
         ),
       ),
@@ -92,6 +77,12 @@ class Carusel extends StatelessWidget {
   }
 
   Widget anotherCarusel(BuildContext context) {
+    List<Widget> poze = [
+      createIcon(context, "poza11.png", 0),
+      createIcon(context, "confortable.png", 1),
+      createIcon(context, "free.png", 2),
+      createIcon(context, "open-door.png", 3),
+    ];
     return CarouselSlider(
         items: poze,
         options: CarouselOptions(

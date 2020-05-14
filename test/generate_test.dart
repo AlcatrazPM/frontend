@@ -1,4 +1,3 @@
-import 'package:alkatrazpm/src/password_gen/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/model/PasswordAttributes.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGenDefault.dart';

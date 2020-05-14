@@ -3,8 +3,6 @@ import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:alkatrazpm/src/password_gen/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/model/PasswordAttributes.dart';
 
 class PasswordGeneratorWidget extends StatefulWidget {

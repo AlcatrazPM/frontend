@@ -14,23 +14,44 @@ class KeysEncryptionDefault implements KeysEncryption {
     String site;
     String user;
     String pass;
-    site =
-        String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
-    user =
-        String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
-    pass =
-        String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
+//    site =
+//        String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
+//    user =
+//        String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
+//    pass =
+//        String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
 
-    return Future.value(new Account(
-        website: site,
-        username: user,
-        password: pass,
-        isFavorite: entry.isFavorite));
+    return Future.value(entry);
+//    return Future.value(new Account(
+//        website: site,
+//        username: user,
+//        password: pass,
+//        isFavorite: entry.isFavorite));
+  }
+
+  @override
+  Future<Account> encryptEntry(Account entry, String DEK) async {
+    String site;
+    String user;
+    String pass;
+//    site =
+//        String.fromCharCodes(base64.decode(await encrypt(entry.website, DEK)));
+//    user =
+//    String.fromCharCodes(base64.decode(await encrypt(entry.username, DEK)));
+//    pass =
+//    String.fromCharCodes(base64.decode(await encrypt(entry.password, DEK)));
+
+    return Future.value(entry);
+//    return Future.value(new Account(
+//    website: site,
+//    username: user,
+//    password: pass,
+//    isFavorite: entry.isFavorite));
   }
 
   @override
   Future<List<Account>> decryptAll(List<Account> entries, String DEK) async {
-    var res = List<Account>(1);
+    var res = List<Account>(entries.length);
     int i = 0;
     for (Account a in entries) {
       res[i] = await decryptEntry(a, DEK);
@@ -74,6 +95,8 @@ class KeysEncryptionDefault implements KeysEncryption {
     Random rand = new Random.secure();
     return List<int>.generate(numBytes, (i) => rand.nextInt(256));
   }
+
+
 }
 
 Uint8List _pad(Uint8List src, int blockSize) {
@@ -124,12 +147,16 @@ String _generateDataEncryptionKey(int) {
   return base64.encode(DEK);
 }
 
+void pop(){
+
+}
+
+
 String _encrypt(List<String> s) {
   var key = s[1];
   var value = s[0];
-  var valueBytes = base64.decode(value);
-  var keyBytes = base64.decode(key);
-
+  var valueBytes = value.codeUnits.map((e) => e).toList();
+  var keyBytes = key.codeUnits.map((e) => e).toList();
   KeyParameter keyParam = new KeyParameter(keyBytes);
   BlockCipher aes = new AESFastEngine();
 
@@ -150,10 +177,11 @@ String _encrypt(List<String> s) {
 }
 
 String _decrypt(List<String> params) {
-  var value = params[0];
-  var key = params[1];
+  var key = params[0];
+  var value = params[1];
   var valueBytes = base64.decode(value);
-  var keyBytes = base64.decode(key);
+  var keyBytes = base64.decode(key);//bas
+
 
   KeyParameter keyParam = new KeyParameter(keyBytes);
   BlockCipher aes = new AESFastEngine();
@@ -170,7 +198,7 @@ String _decrypt(List<String> params) {
   var paddedClearData = _processBlocks(cipher, dataBytes);
   var clearData = _unpad(paddedClearData);
 
-  return String.fromCharCodes(clearData);
+  return base64.encode(clearData);
 }
 
 String _generateKeyEncryptionKey(List<String> params) {

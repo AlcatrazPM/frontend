@@ -1,5 +1,4 @@
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
-import 'package:alkatrazpm/src/password_gen/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/model/PasswordAttributes.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
 import 'package:alkatrazpm/src/ui_utils/AppPage.dart';
@@ -23,11 +22,12 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
   bool AZ = true;
   bool digits = true;
   bool special = false;
-  PasswordAttributes attributes = PasswordAttributes();
+  Future<PasswordAttributes> attributes;
 
   @override
   void initState() {
     generatedPassword = TextEditingController(text: "sdlnjvjkMD3234kjvjk");
+    attributes = deps.get<PasswordGen>().getAttributes();
     super.initState();
   }
 
@@ -67,151 +67,164 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
               width: UiUtils.adaptableWidth(context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      textAlign: TextAlign.center,
-                      controller: generatedPassword,
-                      enabled: false,
-                      decoration: InputDecoration(
-                          filled: true, fillColor: Colors.grey[300]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Expanded(
-                            child: RaisedButton(
-                              onPressed: onGeneratePassword,
-                              child: Text("Regenerate"),
-                            ),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              onPressed: copyPassword,
-                              child: Text("Copy"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "length ${length.toInt()}  ",
-                          ),
-                          Expanded(
-                            child: Slider(
-                              value: length,
-                              min: 8,
-                              max: 50,
-                              divisions: 100,
-                              label: "${length.toInt()}",
-                              onChanged: (newVal) {
-                                length = newVal;
-                                onGeneratePassword();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
+                child: FutureBuilder<PasswordAttributes>(
+                  future: attributes,
+                  builder: (ctx, snapshot){
+                    if(snapshot.hasData){
+                      var attr = snapshot.data;
+                      az = attr.hasLowerCase;
+                      AZ = attr.hasUpperCase;
+                      length = attr.length.toDouble();
+                      special = attr.hasSpecialChars;
+                      digits = attr.hasNumbers;
+                    }
+                    return Column(
                       children: <Widget>[
-                        Expanded(
+                        TextField(
+                          textAlign: TextAlign.center,
+                          controller: generatedPassword,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              filled: true, fillColor: Colors.grey[300]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
-                              Text(
-                                "a-z",
-                                style: TextStyle(color: Colors.grey),
+                              Expanded(
+                                child: RaisedButton(
+                                  onPressed: onGeneratePassword,
+                                  child: Text("Regenerate"),
+                                ),
                               ),
-                              Switch(
-                                  value: az,
-                                  onChanged: (val) {
-                                    az = val;
-                                    onGeneratePassword();
-                                  }),
+                              Expanded(
+                                child: FlatButton(
+                                  onPressed: copyPassword,
+                                  child: Text("Copy"),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Text(
-                                "0-9",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              Spacer(),
-                              Switch(
-                                  value: digits,
-                                  onChanged: (val) {
-                                    digits = val;
-                                    onGeneratePassword();
-                                  })
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: <Widget>[
                               Text(
-                                "a-Z",
-                                style: TextStyle(color: Colors.grey),
+                                "length ${length.toInt()}  ",
                               ),
-                              Switch(
-                                  value: AZ,
-                                  onChanged: (val) {
-                                    AZ = val;
+                              Expanded(
+                                child: Slider(
+                                  value: length,
+                                  min: 8,
+                                  max: 50,
+                                  divisions: 100,
+                                  label: "${length.toInt()}",
+                                  onChanged: (newVal) {
+                                    length = newVal;
                                     onGeneratePassword();
-                                  }),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Text(
-                                "#!)(}/*&^%{",
-                                style: TextStyle(color: Colors.grey),
+                                  },
+                                ),
                               ),
-                              Spacer(),
-                              Switch(
-                                  value: special,
-                                  onChanged: (val) {
-                                    special = val;
-                                    onGeneratePassword();
-                                  }),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: "minimum digits"),
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: "minimum special"),
-                    ),
-                    TextFormField(
-                      decoration:
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text(
+                                    "a-z",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Switch(
+                                      value: az,
+                                      onChanged: (val) {
+                                        az = val;
+                                        onGeneratePassword();
+                                      }),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text(
+                                    "0-9",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Spacer(),
+                                  Switch(
+                                      value: digits,
+                                      onChanged: (val) {
+                                        digits = val;
+                                        onGeneratePassword();
+                                      })
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "a-Z",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Switch(
+                                      value: AZ,
+                                      onChanged: (val) {
+                                        AZ = val;
+                                        onGeneratePassword();
+                                      }),
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    "#!)(}/*&^%{",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Spacer(),
+                                  Switch(
+                                      value: special,
+                                      onChanged: (val) {
+                                        special = val;
+                                        onGeneratePassword();
+                                      }),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(labelText: "minimum digits"),
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(labelText: "minimum special"),
+                        ),
+                        TextFormField(
+                          decoration:
                           InputDecoration(labelText: "excluded characters"),
-                    ),
-                  ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -227,19 +240,20 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
   }
 
   void onGeneratePassword() {
-    attributes = PasswordAttributes(
+    var attr = PasswordAttributes(
       hasLowerCase: az,
       hasUpperCase: AZ,
       hasNumbers: digits,
       hasSpecialChars: special,
       length: length.toInt(),
     );
+    attributes = Future.value(attr);
     genPassword();
   }
 
-  void genPassword() {
+  void genPassword() async{
     try {
-      var password = deps.get<PasswordGen>().genPassword(attributes);
+      var password = deps.get<PasswordGen>().genPassword(await attributes);
       generatedPassword.text = password;
       setState(() {});
     } catch (e) {
@@ -249,7 +263,11 @@ class _PasswordGenScreenState extends State<PasswordGenScreen> {
 
   @override
   void dispose() {
-    deps.get<PasswordGen>().saveAttributes(attributes);
+    saveAttr();
     super.dispose();
+  }
+
+  void saveAttr()async{
+    deps.get<PasswordGen>().saveAttributes(await attributes);
   }
 }

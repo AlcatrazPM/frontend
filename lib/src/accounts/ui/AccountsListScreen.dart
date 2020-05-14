@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/model/AccountsFilter.dart';
 import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
 import 'package:alkatrazpm/src/accounts/ui/AccountDetailsScreen.dart';
@@ -25,6 +26,8 @@ class AccountsListScreen extends StatefulWidget {
 
 class _AccountsListScreenState extends State<AccountsListScreen> {
   Future<List<Account>> currentAccounts;
+  bool isSearchBarActive = false;
+  AccountsFilter filter = AccountsFilter();
 
   @override
   void initState() {
@@ -37,14 +40,71 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
     return Scaffold(
       drawer: kIsWeb ? null : Menu(),
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        title: isSearchBarActive
+            ? Row(
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Spacer(flex: 1),
-            Text("Alcatraz"),
-            Spacer(flex: 2)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                onPressed: (){
+                  filter.onlyFavorites = !filter.onlyFavorites;
+                  setState(() {});
+                },
+                icon: Icon(filter.onlyFavorites ? Icons.favorite : Icons.favorite_border),
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context)
+                  .size.width*0.45),
+              child: Theme(
+                data: Theme.of(context).copyWith(primaryColor: Colors.blue,
+                    brightness: Brightness.dark),
+                child: TextField(
+                  onChanged: (val){
+                    filter.toSearch = val;
+                    setState(() {});
+                  },
+                  style: TextStyle(color: Colors.white),
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color:Colors.white60),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                    ),
+                    hintText: "Search here",
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: IconButton(
+                onPressed: (){
+                  isSearchBarActive = false;
+                  setState(() {});
+                },
+                icon: Icon(Icons.close),
+              ),
+            )
           ],
-        ),
+        )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Spacer(flex: 1),
+                  Text("Alcatraz"),
+                  Spacer(flex: 1),
+                  IconButton(icon: Icon(Icons.search),
+                  onPressed: (){
+                    isSearchBarActive = true;
+                    setState(() {});
+                  },)
+                ],
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: showAddAccountDialog,
@@ -65,9 +125,23 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
                     child: FutureBuilder<List<Account>>(
                       future: currentAccounts,
                       builder: (context, snapshot) {
+                        List<Account> accounts = List();
+                        if (snapshot.hasError) {
+                          return ListView.builder(
+                            addAutomaticKeepAlives: true,
+                            itemBuilder: (ctx, i) {
+                              return Container(
+                                child: Text("Something went "
+                                    "wrong"),
+                              );
+                            },
+                            itemCount: 1,
+                          );
+                        }
                         if (snapshot.hasData) {
-                          var accounts = snapshot.data;
-
+                          accounts = filterAccounts(snapshot.data, filter);
+                          currentAccounts = Future.value(List<Account>.from
+                            (snapshot.data));
                           return ListView.builder(
                             addAutomaticKeepAlives: true,
                             itemBuilder: (ctx, i) {
@@ -135,6 +209,14 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
+                    ConstrainedBox(
+                        constraints:
+                        BoxConstraints(maxWidth: 60, maxHeight: 60, minWidth:
+                        60, minHeight: 60),
+                        child: Image.memory(
+                          account.iconBytes,
+                          scale: 0.7,
+                        )),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -166,13 +248,11 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
                       ],
                     ),
                     Spacer(),
-                    ConstrainedBox(
-                        constraints:
-                            BoxConstraints(maxWidth: 60, maxHeight: 60),
-                        child: Image.memory(
-                          account.iconBytes,
-                          scale: 0.7,
-                        ))
+                    IconButton(
+                      icon: Icon(account.isFavorite ? Icons.favorite : Icons
+                          .favorite_border, color: Colors.blue,),
+                      onPressed: () {changeFavorite(account);},
+                    )
                   ],
                 ),
                 Row(
@@ -194,6 +274,19 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
     );
   }
 
+
+  Future<void> changeFavorite(Account account) async{
+    try{
+      await deps.get<AccountsService>().changeFavorite(account);
+      setState(() {});
+    }catch(e){
+      account.isFavorite = !account.isFavorite;
+      SnackBarUtils.showError(context, "Couldn't change");
+    }
+  }
+  List<Account> filterAccounts(List<Account> accounts, AccountsFilter filter){
+    return deps.get<AccountsService>().filter(accounts, filter);
+  }
   String minimumSizeTransform(String text) {
     if (text.length < 19) return text;
     return text.substring(0, 16) + "...";
@@ -203,7 +296,8 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
     return deps.get<AccountsService>().getAccounts();
   }
 
-  Future<void> refresh() async{
+
+  Future<void> refresh() async {
     currentAccounts = getAccounts();
     await currentAccounts;
     setState(() {});
@@ -224,18 +318,18 @@ class _AccountsListScreenState extends State<AccountsListScreen> {
     }
   }
 
-  void showDetails(BuildContext context, Account account) async{
+  void showDetails(BuildContext context, Account account) async {
     await Navigator.push(context,
         MaterialPageRoute(builder: (ctx) => AccountDetailsScreen(account)));
     setState(() {});
   }
 
   Future<void> removeAccount(Account account, int index) async {
-    try{
+    try {
       await deps.get<AccountsService>().deleteAccount(account);
-      (await currentAccounts).removeWhere((a )=> a.id == account.id);
+      (await currentAccounts).removeWhere((a) => a.id == account.id);
       SnackBarUtils.showConfirmation(context, "Account removed");
-    }catch(e){
+    } catch (e) {
       SnackBarUtils.showError(context, e.toString());
       setState(() {});
     }

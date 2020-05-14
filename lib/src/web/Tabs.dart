@@ -29,7 +29,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
         onPressed: () async{
           deps.get<LogoutInterceptor>().setInterceptor(null);
           await deps.get<AuthService>().logout();
-          Navigator.push(context, MaterialPageRoute(
+          Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (ctx) => AuthScreen()
           ));
         },

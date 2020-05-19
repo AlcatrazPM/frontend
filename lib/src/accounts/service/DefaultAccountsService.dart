@@ -12,6 +12,7 @@ import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //TODO update when backend is ready
 class DefaultAccountsService implements AccountsService {
@@ -31,8 +32,13 @@ class DefaultAccountsService implements AccountsService {
       if (response.statusCode == 200) {
         var accounts = (response.data["accounts"] as List<dynamic>)
             .map((e) => Account.fromJson(e)).toList();
+
+        var sharedPrefs = await SharedPreferences.getInstance();
+
+
+
         accounts = await deps.get<KeysEncryption>().decryptAll(accounts,
-    user.authResponse.eDek);
+          sharedPrefs.get("DEK"));
         var favIconService = deps.get<FavIconService>();
         for(Account account in accounts){
           account.iconBytes =
@@ -57,10 +63,10 @@ class DefaultAccountsService implements AccountsService {
   @override
   Future<bool> modifyAccount(Account account) async{
     try {
+      var sharedPrefs = await SharedPreferences.getInstance();
       var user = await deps.get<AuthService>().loggedUser();
       var encrypted = await deps.get<KeysEncryption>().encryptEntry(account,
-          user
-              .authResponse.eDek);
+        sharedPrefs.get("DEK"));
       var response =
       await _dio.put("/modifyaccount",
           options: Options(headers: {
@@ -102,10 +108,10 @@ class DefaultAccountsService implements AccountsService {
     int s = DateTime.now().millisecondsSinceEpoch;
     account.id = s.toString();
     try {
+      var sharedPrefs = await SharedPreferences.getInstance();
       var user = await deps.get<AuthService>().loggedUser();
       var encrypted = await deps.get<KeysEncryption>().encryptEntry(account,
-          user
-          .authResponse.eDek);
+          sharedPrefs.get("DEK"));
 
       var response =
           await _dio.put("/addaccount",

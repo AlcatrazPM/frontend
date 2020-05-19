@@ -7,6 +7,7 @@ import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class KeysEncryptionDefault implements KeysEncryption {
   @override
@@ -14,19 +15,18 @@ class KeysEncryptionDefault implements KeysEncryption {
     String site;
     String user;
     String pass;
-//    site =
-//        String.fromCharCodes(base64.decode(await decrypt(entry.website, DEK)));
-//    user =
-//        String.fromCharCodes(base64.decode(await decrypt(entry.username, DEK)));
-//    pass =
-//        String.fromCharCodes(base64.decode(await decrypt(entry.password, DEK)));
+    site = await decrypt(entry.website, DEK, "false");
+    user = await decrypt(entry.username, DEK, "false");
+    pass = await decrypt(entry.password, DEK, "false");
 
-    return Future.value(entry);
-//    return Future.value(new Account(
-//        website: site,
-//        username: user,
-//        password: pass,
-//        isFavorite: entry.isFavorite));
+    // return Future.value(entry);
+   return Future.value(
+    new Account(
+      id: entry.id,
+      website: site,
+      username: user,
+      password: pass,
+      isFavorite: entry.isFavorite));
   }
 
   @override
@@ -34,19 +34,19 @@ class KeysEncryptionDefault implements KeysEncryption {
     String site;
     String user;
     String pass;
-//    site =
-//        String.fromCharCodes(base64.decode(await encrypt(entry.website, DEK)));
-//    user =
-//    String.fromCharCodes(base64.decode(await encrypt(entry.username, DEK)));
-//    pass =
-//    String.fromCharCodes(base64.decode(await encrypt(entry.password, DEK)));
 
-    return Future.value(entry);
-//    return Future.value(new Account(
-//    website: site,
-//    username: user,
-//    password: pass,
-//    isFavorite: entry.isFavorite));
+   site = await encrypt(entry.website, DEK, "false");
+   user = await encrypt(entry.username, DEK, "false");
+   pass = await encrypt(entry.password, DEK, "false");
+
+    // return Future.value(entry);
+   return Future.value(
+     new Account(
+      id: entry.id,
+      website: site,
+      username: user,
+      password: pass,
+      isFavorite: entry.isFavorite));
   }
 
   @override
@@ -66,13 +66,13 @@ class KeysEncryptionDefault implements KeysEncryption {
   }
 
   @override
-  Future<String> encrypt(String value, String key) async {
-    return compute(_encrypt, [value, key]);
+  Future<String> encrypt(String value, String key, String isBase64) async {
+    return compute(_encrypt, [value, key, isBase64]);
   }
 
   @override
-  Future<String> decrypt(String value, String key) async {
-    return compute(_decrypt, [value, key]);
+  Future<String> decrypt(String value, String key, String toBase64) async {
+    return compute(_decrypt, [value, key, toBase64]);
   }
 
   @override
@@ -155,8 +155,12 @@ void pop(){
 String _encrypt(List<String> s) {
   var key = s[1];
   var value = s[0];
-  var valueBytes = value.codeUnits.map((e) => e).toList();
-  var keyBytes = key.codeUnits.map((e) => e).toList();
+  bool isBase64 = s[2] == "true" ? true : false;
+
+  var valueBytes = isBase64 
+    ? base64.decode(value) 
+    : value.codeUnits.map((e) => e).toList();
+  var keyBytes = base64.decode(key);
   KeyParameter keyParam = new KeyParameter(keyBytes);
   BlockCipher aes = new AESFastEngine();
 
@@ -177,8 +181,10 @@ String _encrypt(List<String> s) {
 }
 
 String _decrypt(List<String> params) {
-  var key = params[0];
-  var value = params[1];
+  var key = params[1];
+  var value = params[0];
+  bool toBase64 = params[2] == "true" ? true : false;
+
   var valueBytes = base64.decode(value);
   var keyBytes = base64.decode(key);//bas
 
@@ -198,7 +204,9 @@ String _decrypt(List<String> params) {
   var paddedClearData = _processBlocks(cipher, dataBytes);
   var clearData = _unpad(paddedClearData);
 
-  return base64.encode(clearData);
+  return toBase64 
+    ? base64.encode(clearData) 
+    : new String.fromCharCodes(clearData);
 }
 
 String _generateKeyEncryptionKey(List<String> params) {
@@ -207,7 +215,7 @@ String _generateKeyEncryptionKey(List<String> params) {
   var KEK = Uint8List(32);
 
   var decodedSalt = Uint8List.fromList(base64.decode(salt));
-  var decodedBase = Uint8List.fromList(base64.decode(password));
+  var decodedBase = Uint8List.fromList(password.codeUnits.map((e) => e).toList());
 
   KeyDerivator kd = new KeyDerivator("SHA-1/HMAC/PBKDF2");
   var pbkdfParams = new Pbkdf2Parameters(decodedSalt, 100000, 32);

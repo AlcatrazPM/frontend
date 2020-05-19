@@ -18,6 +18,7 @@ class DefaultAuthService implements AuthService {
   static const String _SESSION_TIMER = "session_timer";
   static const String _SESSION_START_DATE = "session_start_date";
   static const String _JWT = "JWT";
+  static const String _DEK = "DEK";
 
   Dio _dio;
   User _user;
@@ -27,8 +28,9 @@ class DefaultAuthService implements AuthService {
   @override
   Future<User> login(AuthCredentials credentials) async {
     try {
-      var hashedPassword = await deps
-          .get<KeysEncryption>()
+      var encrypt = deps.get<KeysEncryption>();
+
+      var hashedPassword = await encrypt
           .passwordHash(credentials.password, 100);
       print("hashed:\n"+hashedPassword);
       var response = await _dio.post("/login", data: {
@@ -44,6 +46,23 @@ class DefaultAuthService implements AuthService {
             .millisecondsSinceEpoch;
         _user = User(credentials.email, authResponse);
         await saveUser(_user);
+
+        print(authResponse.iKek);
+        print(authResponse.eDek);
+
+
+        var sharedPrefs = await SharedPreferences.getInstance();
+        sharedPrefs.setString(
+          _DEK, 
+          await encrypt.decrypt(
+            authResponse.eDek, 
+            await encrypt.generateKeyEncryptionKey(
+              credentials.password,
+              authResponse.iKek), 
+            "true"));
+
+        print(sharedPrefs.getString(_DEK));
+
         return Future.value(_user);
       }
       return Future.error("some error");
@@ -63,13 +82,22 @@ class DefaultAuthService implements AuthService {
     try {
 
       var encrypt = deps.get<KeysEncryption>();
-      var iKEK = await
-        encrypt.generateKeyEncryptionKey(
-            credentials.password, await encrypt.generateKEKSalt());
+      var iKEK = await encrypt.generateKEKSalt();
+      print(iKEK);
+        // encrypt.generateKeyEncryptionKey(
+        //     credentials.password, await encrypt.generateKEKSalt());
 
-      var eDEK = await encrypt.generateDataEncryptionKey();
+      var eDEK = await encrypt.encrypt(
+        await encrypt.generateDataEncryptionKey(), 
+        await encrypt.generateKeyEncryptionKey(
+          credentials.password, 
+          iKEK),
+          "true");
+      print(eDEK);
+      
       var hashedPassword =
-      await encrypt.passwordHash(credentials.password, 100);
+        await encrypt.passwordHash(credentials.password, 100);
+
       var response = await _dio.post("/register", data: {
         "username": credentials.email,
         "name": credentials.username,
@@ -122,6 +150,8 @@ class DefaultAuthService implements AuthService {
 
   Future<void> saveUser(User user) async {
     var sharedPrefs = await SharedPreferences.getInstance();
+    // var encrypt = deps.get<KeysEncryption>();
+
     sharedPrefs.setBool(_LOGGED_IN, true);
     sharedPrefs.setString(_EMAIL, user.email);
     sharedPrefs.setString(_JWT, user.authResponse.jwt);
@@ -132,6 +162,7 @@ class DefaultAuthService implements AuthService {
         _SESSION_START_DATE, DateTime
         .now()
         .millisecondsSinceEpoch);
+
     return Future.value();
   }
 

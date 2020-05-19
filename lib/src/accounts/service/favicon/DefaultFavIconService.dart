@@ -18,8 +18,7 @@ class DefaultFavIconService implements FavIconService {
   @override
   Future<Uint8List> getFavIcon(String website) async {
     try {
-      Response<List<int>> res = await _dio.get<List<int>>("http://www.google"
-          ".com/s2/favicons?domain=$website",
+      Response<List<int>> res = await _dio.get<List<int>>("https://services.keeweb.info/favicon/$website",
         options: Options(responseType: ResponseType.bytes),);
 
       if(res != null){

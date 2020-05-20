@@ -20,9 +20,9 @@ class UiUtils {
 
   static bool isMobile(BuildContext context) {
     double r = screenRatio(context);
-    if( r < 1.0 && MediaQuery.of(context).size.width < 735)
+    if( r > 1.3)
       return true;
-    return r > 0.8;
+    return false;
   }
 
   static double authTitlefontSize(BuildContext context){

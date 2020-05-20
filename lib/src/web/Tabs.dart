@@ -57,7 +57,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                       child: Column(
                         children: <Widget>[
                           Icon(
-                            Icons.pets,
+                            Icons.security,
                             color: Colors.white,
                           )
                         ],
@@ -111,7 +111,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
         body: AppPage(
           child: Row(
             children: <Widget>[
-
               Expanded(
                   flex: MediaQuery.of(context).size.width < 1700 ? 0 : 1,
                   child: Container(
@@ -120,7 +119,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     child: MediaQuery.of(context).size.width < 1700 ? null : FittedBox(child: Image.asset('images/lock4.jpg'), fit: BoxFit.fitHeight,),)),
 
               Expanded(
-
                 flex: 3,
                 child: Container(
                   padding: EdgeInsets.all(0.0),

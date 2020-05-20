@@ -7,7 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 class Carusel extends StatelessWidget {
   static List<String> titles = [
     "Secure",
-    "Confortable",
+    "Comfortable",
     "! FREE !",
     "Try it now",
   ];

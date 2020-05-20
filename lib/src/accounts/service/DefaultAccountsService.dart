@@ -18,10 +18,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DefaultAccountsService implements AccountsService {
   Dio _dio;
   DefaultAccountsService(this._dio);
+  List<Account> _cachedAccounts;
 
 
   @override
-  Future<List<Account>> getAccounts() async {
+  Future<List<Account>> getAccounts({bool fromCache = false}) async {
+    if(fromCache && _cachedAccounts != null)
+      return Future.value(_cachedAccounts);
     try {
       var user = await deps.get<AuthService>().loggedUser();
       var response =
@@ -37,8 +40,8 @@ class DefaultAccountsService implements AccountsService {
 
 
 
-        accounts = await deps.get<KeysEncryption>().decryptAll(accounts,
-          sharedPrefs.get("DEK"));
+//        accounts = await deps.get<KeysEncryption>().decryptAll(accounts,
+//          sharedPrefs.get("DEK"));
         var favIconService = deps.get<FavIconService>();
         for(Account account in accounts){
           account.iconBytes =
@@ -46,6 +49,7 @@ class DefaultAccountsService implements AccountsService {
           print(account.iconBytes.length);
 
         }
+        _cachedAccounts = accounts;
         return Future.value(accounts);
       }
       return Future.error("Scary error");

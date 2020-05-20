@@ -82,6 +82,7 @@ class _RegisterFragmentState extends State<RegisterFragment> {
           child: TextFormField(
             controller: confirmPassword,
             obscureText: true,
+            textInputAction: TextInputAction.send,
             validator: (pass) {
               if (confirmPassword.text != password.text) return "passwords do not"
                   " match";
@@ -89,6 +90,9 @@ class _RegisterFragmentState extends State<RegisterFragment> {
             },
             onChanged: (s) {
               _confirmPasswordey.currentState.validate();
+            },
+            onFieldSubmitted: (v){
+              doRegister(email.text, username.text, password.text);
             },
             decoration: InputDecoration(
               labelText: "Confirm Password",

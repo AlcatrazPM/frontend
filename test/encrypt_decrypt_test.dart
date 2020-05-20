@@ -23,7 +23,7 @@ void main() {
     KeysEncryption ke = new KeysEncryptionDefault();
 
     var kek = ke.generateKeyEncryptionKey(mp, i_kek);
-    var dek = ke.decrypt(e_dek, await kek);
+    var dek = ke.decrypt(e_dek, await kek, "false");
 
     print(base64.decode(await dek));
 
@@ -40,8 +40,8 @@ void main() {
 
     print(await dek);
 
-    var enc_dek = ke.encrypt(await dek, await kek);
-    var dek2 = ke.decrypt(await enc_dek, await kek);
+    var enc_dek = ke.encrypt(await dek, await kek, "false");
+    var dek2 = ke.decrypt(await enc_dek, await kek, "false");
 
     print(await dek2);
 

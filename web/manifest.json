@@ -1,6 +1,6 @@
 {
-    "name": "frontend",
-    "short_name": "frontend",
+    "name": "alcatraz pm",
+    "short_name": "alcatraz",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",

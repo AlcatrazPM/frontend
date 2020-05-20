@@ -1,3 +1,11 @@
+import 'package:alkatrazpm/src/accounts/model/Account.dart';
+import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
+import 'package:alkatrazpm/src/auth/model/AuthCredentials.dart';
+import 'package:alkatrazpm/src/auth/service/AuthService.dart';
+import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
+import 'package:alkatrazpm/src/file_saver/FileSaver.dart';
+import 'package:alkatrazpm/src/ui_utils/Loading.dart';
+import 'package:alkatrazpm/src/ui_utils/SnackBarUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +22,7 @@ class ExportVault extends StatefulWidget {
 class _ExportVaultState extends State<ExportVault> {
   double leftPadding = 8.0;
   double topTitlePadding = 8.0;
+  LoadingController loadingController;
 
   CriptoType _selectedCripto;
   List<DropdownMenuItem<CriptoType>> listaCripto;
@@ -26,6 +35,7 @@ class _ExportVaultState extends State<ExportVault> {
   @override
   void initState() {
     //To remove these....
+    loadingController = LoadingController();
     _selectedCripto = CriptoType.DaCuZaru;
     listaCripto = new List<DropdownMenuItem<CriptoType>>();
     listaCripto.add(DropdownMenuItem(
@@ -94,7 +104,6 @@ class _ExportVaultState extends State<ExportVault> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-
         // title
         Padding(
           padding: const EdgeInsets.only(
@@ -164,14 +173,20 @@ class _ExportVaultState extends State<ExportVault> {
         //Here starts the submit button
         Padding(
           padding: EdgeInsets.only(left: leftPadding, top: 20.0),
-          child: RaisedButton(
-            child: Text("Export",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,)),
-            onPressed: () {
-              submitExport(masterPasswordString, _selectedExport);
-            },
-            color: Colors.blue,
-            splashColor: Colors.yellow,
+          child: Loading(
+            controller: loadingController,
+            child: RaisedButton(
+              child: Text("Export",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  )),
+              onPressed: () {
+                submitExport(masterPasswordString, _selectedExport);
+              },
+              color: Colors.blue,
+              splashColor: Colors.yellow,
+            ),
           ),
         ),
       ],
@@ -180,6 +195,54 @@ class _ExportVaultState extends State<ExportVault> {
 
   //BACKEND---------------------------------------------
   Future<String> submitExport(String masterPassword, ExportType tipExp) async {
+    loadingController.setLoading();
+    var authService = deps.get<AuthService>();
+    var user = await authService.loggedUser();
+    try {
+      await authService
+          .login(AuthCredentials.login(user.email, masterPassword));
+      saveAccountsToFile(tipExp);
+    } catch (e) {
+      loadingController.setDone();
+      SnackBarUtils.showError(context, "Wrong password");
+    }
+
     return "Va pup, frumosilor.\n";
+  }
+
+  Future<void> saveAccountsToFile(ExportType exportType) async {
+    var accounts =
+        await deps.get<AccountsService>().getAccounts(fromCache: true);
+    var text = "";
+    String fileName;
+    switch(exportType){
+      case ExportType.Csv:{
+        fileName = "accounts.csv";
+        text += "website, username, password, isFavorite\n";
+        for(Account a in accounts){
+          text += "${a.website}, ${a.username}, ${a.password}, ${a
+              .isFavorite}\n";
+        }
+        break;
+      }
+      case ExportType.Json:
+        text += "[\n";
+        for(Account a in accounts){
+          text +=
+              "   {\n"
+              "       \"website\":\"${a.website}\",\n"
+              "       \"username\":\"${a.username}\",\n"
+              "       \"password\":\"${a.password}\",\n"
+              "       \"isFavorite\":\"${a.isFavorite}\"\n"
+              "   },\n";
+        }
+        text = text.substring(0, text.length-2);
+        text += "\n]";
+        fileName = "accounts.json";
+        break;
+    }
+    deps.get<FileSaver>().saveFile(fileName, text);
+    loadingController.setDone();
+    return Future.value();
   }
 }

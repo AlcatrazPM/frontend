@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/FavIconService.dart';
 import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
@@ -73,75 +75,72 @@ class _BetterVaultState extends State<BetterVault> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: boxWidth,
-              height: boxHeight,
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              child: Row(
-                children: <Widget>[
-                  //First Column of the page.
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      //color: Colors.red,
-                      child: Column(
-                        children: <Widget>[
-                          ToolsPrompt(),
-                        ],
-                      ),
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: boxWidth,
+            height: max(1000.0, MediaQuery.of(context).size.height),
+            decoration: BoxDecoration(
+                // border: Border.all(),
+                ),
+            child: Row(
+              children: <Widget>[
+                //First Column of the page.
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    //color: Colors.red,
+                    child: Column(
+                      children: <Widget>[
+                        ToolsPrompt(),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      //color: Colors.blue,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          // title
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
-                            child: getHeading('Vault', context),
-                          ),
-                          Divider(
-                            height: 3.0,
-                            thickness: 2.0,
-                          ),
-                          Container(
-                            height: boxHeight - 100,
-                            padding: EdgeInsets.only(top: 4.0),
-                            child: FutureBuilder<List<Account>>(
-                                future: currentAccounts,
-                                builder: (ctx, snapshot) {
-                                  print(snapshot.data);
-                                  if (snapshot.hasData) {
-                                    listAccount =
-                                        filter(snapshot.data, myFilter);
-                                    listaAfisata = listAccount;
-                                    currentAccounts = Future.value(List<Account>.from
-                                      (snapshot.data));
-                                    return getListView();
-                                  }
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }),
-                          ),
-                        ],
-                      ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    //color: Colors.blue,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // title
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 8.0, bottom: 8.0, top: 8.0),
+                          child: getHeading('Vault', context),
+                        ),
+                        Divider(
+                          height: 3.0,
+                          thickness: 2.0,
+                        ),
+                        Container(
+                          height: boxHeight - 100,
+                          padding: EdgeInsets.only(top: 4.0),
+                          child: FutureBuilder<List<Account>>(
+                              future: currentAccounts,
+                              builder: (ctx, snapshot) {
+                                print(snapshot.data);
+                                if (snapshot.hasData) {
+                                  listAccount = filter(snapshot.data, myFilter);
+                                  listaAfisata = listAccount;
+                                  currentAccounts = Future.value(
+                                      List<Account>.from(snapshot.data));
+                                  return getListView();
+                                }
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -171,10 +170,13 @@ class _BetterVaultState extends State<BetterVault> {
             scale: 0.5,
           )),
       subtitle: Text(listaAfisata[index].username),
-      trailing: FlatButton(
-        child: listaAfisata[index].isFavorite
-            ? Icon(Icons.favorite)
-            : Icon(Icons.favorite_border),
+      trailing: IconButton(
+        icon: Icon(
+          listaAfisata[index].isFavorite
+              ? Icons.favorite
+              : Icons.favorite_border,
+          color: Colors.blue,
+        ),
         onPressed: () {
           changeFavorite(listaAfisata[index]);
         },
@@ -184,7 +186,7 @@ class _BetterVaultState extends State<BetterVault> {
 
   Widget getListView() {
     //var listItems = getListElements();
-
+    print(listAccount);
     var listView = ListView.separated(
       itemCount: listAccount.length,
       separatorBuilder: (context, index) => Row(
@@ -420,10 +422,9 @@ class _BetterVaultState extends State<BetterVault> {
 
   // data field = custom text form field
   //Data field for POP UP---------------------------------------
-  //-------------------
-
   Widget DataField(
-      String title, Account account, TextEditingController dataController) {
+      String title, Account account, TextEditingController dataController,
+      {Widget suffix, bool hideInput = false}) {
     switch (title) {
       case 'Website':
         dataController.text = account.website;
@@ -442,8 +443,10 @@ class _BetterVaultState extends State<BetterVault> {
       style: TextStyle(
         fontSize: 15.0,
       ),
+      //obscureText: hideInput,
       decoration: InputDecoration(
-        labelText: title,
+//        labelText: title,
+        //suffix: suffix == null ? Container() : suffix,
         border: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
         contentPadding: EdgeInsets.only(
           bottom: 10.0,
@@ -459,6 +462,8 @@ class _BetterVaultState extends State<BetterVault> {
       },
     );
   }
+
+  //-------------------
 
   //Creates the POP UP-----------------------------------------------
   //-----------------
@@ -538,9 +543,7 @@ class _BetterVaultState extends State<BetterVault> {
                               padding: EdgeInsets.all(0.0),
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
-                                child: account.isFavorite
-                                    ? Icon(Icons.favorite)
-                                    : Icon(Icons.favorite_border),
+                                child: FavoriteButton(account, changeFavorite),
                               ),
                             ),
                           ],
@@ -585,28 +588,22 @@ class _BetterVaultState extends State<BetterVault> {
                               child: DataField(
                                   'Username', account, _usernameController)),
                         ),
-
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+                          child: Text('Password'),
+                        ),
                         // password
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, right: 8.0, top: 8.0, bottom: 8.0),
-                              child: SizedBox(
-                                  width: 300,
-                                  height: 35,
-                                  child: DataField(
-                                      'Password', account, _passwordController)),
-                            ),
+                        PasswordTextInput(
                             IconButton(
                               icon: Icon(Icons.refresh),
                               onPressed: () {
                                 print("gen");
                                 genPassword();
                               },
-                            )
-                          ],
-                        ),
+                            ),
+                            genPassword,
+                            account,
+                            _passwordController),
 
                         Spacer(),
 
@@ -683,7 +680,8 @@ class _BetterVaultState extends State<BetterVault> {
   }
 
   void genPassword() async {
-    _passwordController.text = await deps.get<PasswordGen>().generatePassword();
+    _account.password = await deps.get<PasswordGen>().generatePassword();
+    _passwordController.text = _account.password;
     print(_passwordController.text);
     setState(() {});
   }
@@ -696,6 +694,7 @@ class _BetterVaultState extends State<BetterVault> {
   void changeFavorite(Account account) async {
     safeNetworkAction(() async {
       account.isFavorite = !account.isFavorite;
+      setState(() {});
       await deps.get<AccountsService>().modifyAccount(account);
       setState(() {});
     }, pop: false);
@@ -705,7 +704,8 @@ class _BetterVaultState extends State<BetterVault> {
   void onDelete(Account account) async {
     safeNetworkAction(() async {
       await deps.get<AccountsService>().deleteAccount(account);
-      (await currentAccounts).removeWhere((element) => element.id == account.id);
+      (await currentAccounts)
+          .removeWhere((element) => element.id == account.id);
       loadingController.setDone();
       SnackBarUtils.showConfirmation(context, "Account deleted");
     });
@@ -749,5 +749,131 @@ class _BetterVaultState extends State<BetterVault> {
       loadingController.setDone();
       SnackBarUtils.showError(context, "something went wrong");
     }
+  }
+}
+
+class FavoriteButton extends StatefulWidget {
+  final Account account;
+  final Function(Account) changeAccount;
+
+  FavoriteButton(this.account, this.changeAccount);
+
+  @override
+  _FavoriteButtonState createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        widget.account.isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: Colors.blue,
+      ),
+      onPressed: () {
+        widget.changeAccount(widget.account);
+        setState(() {});
+      },
+    );
+  }
+}
+
+class PasswordTextInput extends StatefulWidget {
+  Account account;
+  TextEditingController controller;
+  Function update;
+  Widget child;
+
+  PasswordTextInput(this.child, this.update, this.account, this.controller);
+
+  @override
+  _PasswordTextInputState createState() => _PasswordTextInputState();
+}
+
+class _PasswordTextInputState extends State<PasswordTextInput> {
+  bool popupPasswordHidden = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 8.0, top: 8.0, bottom: 8.0),
+          child: SizedBox(
+              width: 250,
+              height: 35,
+              child: DataField(
+                'Password',
+                widget.account,
+                widget.controller,
+                hideInput: popupPasswordHidden,
+                suffix: IconButton(
+                  icon: Icon(popupPasswordHidden
+                      ? Icons.remove_red_eye
+                      : Icons.remove_circle),
+                  onPressed: () {
+                    popupPasswordHidden = !popupPasswordHidden;
+                    setState(() {});
+                  },
+                ),
+              )),
+        ),
+        IconButton(
+          icon: Icon(Icons.content_copy),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: widget.controller.text));
+            SnackBarUtils.showConfirmation(context, "password copied");
+          },
+        ),
+        widget.child,
+      ],
+    );
+  }
+
+  void genPassword() async {
+    await widget.update();
+    setState(() {});
+  }
+
+  Widget DataField(
+      String title, Account account, TextEditingController dataController,
+      {Widget suffix, bool hideInput = false}) {
+    switch (title) {
+      case 'Website':
+        dataController.text = account.website;
+        break;
+      case 'Username':
+        dataController.text = account.username;
+        break;
+      case 'Password':
+        dataController.text = account.password;
+        break;
+    }
+
+    return TextFormField(
+      controller: dataController,
+      cursorColor: Colors.amber,
+      style: TextStyle(
+        fontSize: 15.0,
+      ),
+      obscureText: hideInput,
+      decoration: InputDecoration(
+//        labelText: title,
+        suffix: suffix == null ? Container() : suffix,
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+        contentPadding: EdgeInsets.only(
+          bottom: 10.0,
+          left: 10.0,
+        ),
+      ),
+      //
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
+      onChanged: (String input_user) {
+        print(dataController.text);
+      },
+    );
   }
 }

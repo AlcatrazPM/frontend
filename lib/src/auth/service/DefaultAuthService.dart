@@ -51,17 +51,17 @@ class DefaultAuthService implements AuthService {
         print(authResponse.eDek);
 
 
-        var sharedPrefs = await SharedPreferences.getInstance();
-        sharedPrefs.setString(
-          _DEK, 
-          await encrypt.decrypt(
-            authResponse.eDek, 
-            await encrypt.generateKeyEncryptionKey(
-              credentials.password,
-              authResponse.iKek), 
-            "true"));
+//        var sharedPrefs = await SharedPreferences.getInstance();
+//        sharedPrefs.setString(
+//          _DEK,
+//          await encrypt.decrypt(
+//            authResponse.eDek,
+//            await encrypt.generateKeyEncryptionKey(
+//              credentials.password,
+//              authResponse.iKek),
+//            "true"));
 
-        print(sharedPrefs.getString(_DEK));
+//        print(sharedPrefs.getString(_DEK));
 
         return Future.value(_user);
       }
@@ -180,15 +180,19 @@ class DefaultAuthService implements AuthService {
       var encrypt = deps.get<KeysEncryption>();
       var oldPasswordHashed = await encrypt.passwordHash(oldPassword, 100);
       var newPasswordHashed = await encrypt.passwordHash(oldPassword, 100);
-      var response = await _dio.post("/modifyPassword",
+      var response = await _dio.post("/modifypassword",
           data: {
             "username": _user.email,
             "old_password": oldPasswordHashed,
-            "new_password": newPasswordHashed
+            "new_password": newPasswordHashed,
+            "new_dek": "EtDimlhuRFU1mWEq0U0o2A/4tlDg45RwDYHFx9heRKOH9KS6MU2O34hdhF/zjMas"
           },
           options: Options(
               headers: {"Authorization": "Bearer ${_user.authResponse.jwt}"}));
       if (response.statusCode == 200) {
+        print(response.request.data);
+        print(response.data);
+        print(response.statusCode);
         return Future.value();
       }
       return Future.error("some error");

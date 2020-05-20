@@ -42,10 +42,13 @@ class _MyAccountState extends State<MyAccount> {
   }
 
   // text form fields
-  Widget DataField(String title, TextEditingController dataController) {
+  Widget DataField(String title, TextEditingController dataController, {bool
+  obscureText = false
+  }) {
     return TextFormField(
       controller: dataController,
       cursorColor: Colors.amber,
+      obscureText: obscureText,
       style: TextStyle(
         fontSize: 15.0,
       ),
@@ -86,7 +89,8 @@ class _MyAccountState extends State<MyAccount> {
         Padding(
           padding: const EdgeInsets.only(
               left: 8.0, top: 15.0, right: 400.0, bottom: 8.0),
-          child: DataField('Master Password', _masterPassword),
+          child: DataField('Master Password', _masterPassword, obscureText:
+          true),
         ),
 
         // New Email
@@ -128,7 +132,8 @@ class _MyAccountState extends State<MyAccount> {
         Padding(
           padding: const EdgeInsets.only(
               left: 8.0, top: 15.0, right: 400.0, bottom: 8.0),
-          child: DataField('Current Master Password', _currentMasterPassword),
+          child: DataField('Current Master Password', _currentMasterPassword,
+              obscureText: true),
         ),
 
         Row(
@@ -139,7 +144,8 @@ class _MyAccountState extends State<MyAccount> {
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 8.0, top: 8.0, right: 25.0, bottom: 8.0),
-                child: DataField('New Master Password', _newMasterPassword),
+                child: DataField('New Master Password', _newMasterPassword,
+                    obscureText: true),
               ),
             ),
 
@@ -150,7 +156,8 @@ class _MyAccountState extends State<MyAccount> {
                 padding: const EdgeInsets.only(
                     left: 8.0, top: 8.0, right: 25.0, bottom: 8.0),
                 child: DataField(
-                    'Confirm New Master Password', _confirmNewMasterPassword),
+                    'Confirm New Master Password', _confirmNewMasterPassword,
+                    obscureText: true),
               ),
             ),
           ],

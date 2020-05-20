@@ -41,13 +41,7 @@ class _AuthScreenState extends State<AuthScreen> {
         return UiUtils.isMobile(context) ? mobile(context) : web(context);
       }else{
        Future.delayed(Duration(seconds: 1), (){
-         if(kIsWeb){
-           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
-           => CustomTabBar()));
-         }else{
-           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
-           => AccountsListScreen()));
-         }
+         pushMobileOrWeb();
        });
         return Container();
       }
@@ -94,7 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Colors.white,
                               ),
                               Text(
-                                "Alkatraz PM",
+                                "Alcatraz PM",
                                 style: TextStyle(fontSize: 30),
                               ),
                             ],
@@ -160,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    "Alkatraz PM",
+                                    "Alcatraz PM",
                                     style: TextStyle(
                                         fontSize: UiUtils.authTitlefontSize(context), color: Colors
                                         .white),
@@ -225,9 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       var user = await deps.get<AuthService>().login(credentials);
       print(user.email);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-        return kIsWeb? CustomTabBar() : AccountsListScreen();
-      }));
+      pushMobileOrWeb();
       return Future.value();
     } catch (e) {
       print(e);
@@ -235,6 +227,7 @@ class _AuthScreenState extends State<AuthScreen> {
       return Future.value(e);
     }
   }
+
 
   Future<void> onRegister(
       String email, String username, String password) async {
@@ -250,6 +243,20 @@ class _AuthScreenState extends State<AuthScreen> {
     } catch (e) {
       SnackBarUtils.showError(context, e.toString());
       return Future.value();
+    }
+  }
+
+  void pushMobileOrWeb(){
+    if(kIsWeb){
+      if(UiUtils.isMobile(context)){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+        => AccountsListScreen()));
+      }else
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+        => CustomTabBar()));
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)
+      => AccountsListScreen()));
     }
   }
 

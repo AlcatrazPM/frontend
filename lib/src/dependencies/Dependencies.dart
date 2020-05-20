@@ -8,9 +8,14 @@ import 'package:alkatrazpm/src/auth/service/AuthService.dart';
 import 'package:alkatrazpm/src/auth/service/DefaultAuthService.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryption.dart';
 import 'package:alkatrazpm/src/crypto/KeysEncryptionDefault.dart';
+import 'package:alkatrazpm/src/file_saver/FileSaver.dart';
+import 'package:alkatrazpm/src/crypto/KeysEncryption.dart'
+    if (dart.library.io) 'package:alkatrazpm/src/file_saver/FileSaverDefault.dart'
+    if (dart.library.html) 'package:alkatrazpm/src/web/FileSaver.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGen.dart';
 import 'package:alkatrazpm/src/password_gen/service/PasswordGenDefault.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt deps = GetIt.instance;
@@ -18,10 +23,10 @@ GetIt deps = GetIt.instance;
 initAllDependencies() {
   var interceptor = LogoutInterceptorDio();
 
-  Dio authDio = Dio(BaseOptions(baseUrl: "http://34.71.231.1:8082"));
+  Dio authDio = Dio(BaseOptions(baseUrl: "http://34.68.31.44/apii/auth"));
   authDio.interceptors.add(interceptor);
 
-  Dio dataDio = Dio(BaseOptions(baseUrl: "http://34.71.231.1:8083"));
+  Dio dataDio = Dio(BaseOptions(baseUrl: "http://34.68.31.44/apii/accounts"));
   dataDio.interceptors.add(interceptor);
 
   deps.registerSingleton<Dio>(dataDio);
@@ -32,4 +37,5 @@ initAllDependencies() {
   deps.registerSingleton<FavIconService>(DefaultFavIconService());
   deps.registerSingleton<PasswordGen>(PasswordGenDefault());
 
+  deps.registerSingleton<FileSaver>(FileSaverDefault());
 }

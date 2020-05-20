@@ -71,7 +71,7 @@ class _ToolsMainPageState extends State<ToolsMainPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                          "Password Manager",
+                          "Password Gen",
                           style: TextStyle(
                             color: isExportVaultPage ? Colors.black : Colors.blue,
                           ),

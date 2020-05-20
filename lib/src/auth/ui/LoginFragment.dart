@@ -52,6 +52,10 @@ class _LoginFragmentState extends State<LoginFragment> {
           child: TextFormField(
             controller: password,
             obscureText: true,
+            textInputAction: TextInputAction.send,
+            onFieldSubmitted: (v){
+              doLogin(context, username.text, password.text);
+            },
             onChanged: (s){
               _passwordKey.currentState.validate();
             },

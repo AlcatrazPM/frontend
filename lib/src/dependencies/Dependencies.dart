@@ -21,12 +21,14 @@ import 'package:get_it/get_it.dart';
 GetIt deps = GetIt.instance;
 
 initAllDependencies() {
+  var env = Platform.environment;
+  var address = env['ADDR'];
   var interceptor = LogoutInterceptorDio();
 
-  Dio authDio = Dio(BaseOptions(baseUrl: "http://34.68.31.44/apii/auth"));
+  Dio authDio = Dio(BaseOptions(baseUrl: "http://$address/apii/auth"));
   authDio.interceptors.add(interceptor);
 
-  Dio dataDio = Dio(BaseOptions(baseUrl: "http://34.68.31.44/apii/accounts"));
+  Dio dataDio = Dio(BaseOptions(baseUrl: "http://$address/apii/accounts"));
   dataDio.interceptors.add(interceptor);
 
   deps.registerSingleton<Dio>(dataDio);

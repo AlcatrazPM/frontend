@@ -24,6 +24,7 @@ dependencies:
     sdk: flutter
   carousel_pro: ^1.0.0
   carousel_slider: ^2.0.0
+  flutter_dotenv: ^3.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -68,6 +69,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/dotenv
     - assets/poza1.jpg
     - assets/poza2.jpg
     - assets/poza3.jpg

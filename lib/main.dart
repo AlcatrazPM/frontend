@@ -5,11 +5,14 @@ import 'package:alkatrazpm/src/dependencies/Dependencies.dart';
 import 'package:alkatrazpm/src/password_gen/ui/PasswordGenScreen.dart';
 import 'package:alkatrazpm/src/web/Carusel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'src/auth/ui/AuthScreen.dart';
 import 'src/web/Tabs.dart';
 
-void main() {
+void main() async{
+  await DotEnv.load(fileName: "dotenv");
+
   initAllDependencies();
   runApp(MyApp());
 }

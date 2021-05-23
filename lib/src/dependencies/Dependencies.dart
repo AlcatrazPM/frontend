@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:alkatrazpm/src/accounts/service/AccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/DefaultAccountsService.dart';
 import 'package:alkatrazpm/src/accounts/service/favicon/DefaultFavIconService.dart';
@@ -17,12 +18,12 @@ import 'package:alkatrazpm/src/password_gen/service/PasswordGenDefault.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_dotenv/flutter/dotenv.dart' as DotEnv;
 
 GetIt deps = GetIt.instance;
 
 initAllDependencies() {
-  var env = Platform.environment;
-  var address = env['ADDR'];
+  var address = DotEnv['ADDR'];
   var interceptor = LogoutInterceptorDio();
 
   Dio authDio = Dio(BaseOptions(baseUrl: "http://$address/apii/auth"));

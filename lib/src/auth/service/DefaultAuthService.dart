@@ -51,20 +51,21 @@ class DefaultAuthService implements AuthService {
         print(authResponse.eDek);
 
 
-//        var sharedPrefs = await SharedPreferences.getInstance();
-//        sharedPrefs.setString(
-//          _DEK,
-//          await encrypt.decrypt(
-//            authResponse.eDek,
-//            await encrypt.generateKeyEncryptionKey(
-//              credentials.password,
-//              authResponse.iKek),
-//            "true"));
+        var sharedPrefs = await SharedPreferences.getInstance();
+        sharedPrefs.setString(
+          _DEK,
+          await encrypt.decrypt(
+            authResponse.eDek,
+            await encrypt.generateKeyEncryptionKey(
+              credentials.password,
+              authResponse.iKek),
+            "true"));
 
-//        print(sharedPrefs.getString(_DEK));
+        print(sharedPrefs.getString(_DEK));
 
         return Future.value(_user);
       }
+      print("sa moara masa");
       return Future.error("some error");
     } catch (e) {
       if (e is DioError) {
@@ -84,8 +85,8 @@ class DefaultAuthService implements AuthService {
       var encrypt = deps.get<KeysEncryption>();
       var iKEK = await encrypt.generateKEKSalt();
       print(iKEK);
-        // encrypt.generateKeyEncryptionKey(
-        //     credentials.password, await encrypt.generateKEKSalt());
+         encrypt.generateKeyEncryptionKey(
+             credentials.password, await encrypt.generateKEKSalt());
 
       var eDEK = await encrypt.encrypt(
         await encrypt.generateDataEncryptionKey(), 

@@ -40,8 +40,8 @@ class DefaultAccountsService implements AccountsService {
 
 
 
-//        accounts = await deps.get<KeysEncryption>().decryptAll(accounts,
-//          sharedPrefs.get("DEK"));
+        accounts = await deps.get<KeysEncryption>().decryptAll(accounts,
+          sharedPrefs.get("DEK"));
         var favIconService = deps.get<FavIconService>();
         for(Account account in accounts){
           account.iconBytes =

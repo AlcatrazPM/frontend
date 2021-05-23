@@ -18,18 +18,20 @@ import 'package:alkatrazpm/src/password_gen/service/PasswordGenDefault.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:flutter_dotenv/flutter/dotenv.dart' as DotEnv;
+
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 GetIt deps = GetIt.instance;
 
 initAllDependencies() {
-  var address = DotEnv['ADDR'];
+  var address = DotEnv.env['ADDR'];
   var interceptor = LogoutInterceptorDio();
 
   Dio authDio = Dio(BaseOptions(baseUrl: "http://$address/apii/auth"));
   authDio.interceptors.add(interceptor);
 
   Dio dataDio = Dio(BaseOptions(baseUrl: "http://$address/apii/accounts"));
+
   dataDio.interceptors.add(interceptor);
 
   deps.registerSingleton<Dio>(dataDio);

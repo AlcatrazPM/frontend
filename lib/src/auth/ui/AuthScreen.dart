@@ -215,6 +215,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<String> changeMail(String sdf, String df) async {}
 
   Future<void> onLogin(String email, String password) async {
+    print(email);
+    print(password);
     var credentials = AuthCredentials.login(email, password);
     try {
       var user = await deps.get<AuthService>().login(credentials);

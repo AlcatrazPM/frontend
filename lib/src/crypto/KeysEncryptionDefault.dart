@@ -12,7 +12,7 @@ import 'package:pointycastle/export.dart';
 class KeysEncryptionDefault implements KeysEncryption {
   @override
   Future<Account> decryptEntry(Account entry, String DEK) async {
-    return Future.value(entry);
+    //return Future.value(entry);
     String site;
     String user;
     String pass;
@@ -32,7 +32,7 @@ class KeysEncryptionDefault implements KeysEncryption {
 
   @override
   Future<Account> encryptEntry(Account entry, String DEK) async {
-    return Future.value(entry);
+    //return Future.value(entry);
     String site;
     String user;
     String pass;
@@ -53,13 +53,13 @@ class KeysEncryptionDefault implements KeysEncryption {
 
   @override
   Future<List<Account>> decryptAll(List<Account> entries, String DEK) async {
-//    var res = List<Account>(entries.length);
-//    int i = 0;
-//    for (Account a in entries) {
-//      res[i] = await decryptEntry(a, DEK);
-//      i++;
-//    }
-    return Future.value(entries);
+    var res = List<Account>(entries.length);
+    int i = 0;
+    for (Account a in entries) {
+      res[i] = await decryptEntry(a, DEK);
+      i++;
+    }
+    return Future.value(res);
   }
 
   @override
